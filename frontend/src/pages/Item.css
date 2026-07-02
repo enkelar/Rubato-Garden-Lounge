@@ -1,0 +1,142 @@
+/* Item page - Detail view */
+.rg-detail {
+  animation: rg-fade 0.4s ease both;
+}
+
+.rg-detail-hero {
+  position: relative;
+  width: 75%;
+  max-width: 600px;
+  margin: 50px auto;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius:28px 28px;
+  box-shadow: var(--rg-shadow);
+}
+
+.rg-detail-hero img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.rg-detail-img-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e8dcc8 0%, #d9cfc0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--rg-green);
+  padding: 20px;
+}
+
+.rg-close {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: rgba(255, 253, 247, 0.95);
+  color: var(--rg-green);
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.rg-detail-body {
+  padding: 24px 20px 0;
+}
+
+.rg-detail-name {
+  font-family: var(--rg-font-display);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--rg-green);
+  margin: 0 0 8px;
+  line-height: 1.1;
+}
+
+.rg-detail-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--rg-brass);
+  margin-bottom: 22px;
+}
+
+.rg-section-label {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--rg-leaf);
+  margin-bottom: 8px;
+}
+
+.rg-section {
+  margin-bottom: 22px;
+}
+
+.rg-section p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--rg-ink);
+  margin: 0;
+}
+
+.rg-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.rg-btn {
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: none;
+  font-family: var(--rg-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+
+.rg-btn:active {
+  transform: scale(0.97);
+}
+
+.rg-btn-primary {
+  background: var(--rg-green);
+  color: #fffdf7;
+}
+
+.rg-btn-primary:hover {
+  background: var(--rg-green-2);
+}
+
+.rg-btn-ghost {
+  background: transparent;
+  color: var(--rg-green);
+  border: 1.5px solid var(--rg-green);
+}

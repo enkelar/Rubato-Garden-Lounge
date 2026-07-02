@@ -1,0 +1,107 @@
+/* Rubato Garden Lounge — design system (plain CSS, no Tailwind) */
+/* f6f1e7 */
+/* efe7d6 */
+/* 1f2a23 */
+:root {
+  --rg-bg: #f6f1e7;
+  --rg-bg-2: #efe7d6;
+  --rg-ink: #1f2a23; 
+  --rg-ink-soft: #4a5a4e;
+  --rg-green: #1e3d2f;
+  --rg-green-2: #2c5a44;
+  --rg-leaf: #6a8f6b;
+  --rg-brass: #b8893a;
+  --rg-brass-2: #d9a85a;
+  --rg-card: #fffdf7;
+  --rg-shadow: 0 10px 30px -12px rgba(30, 61, 47, 0.25);
+  --rg-radius: 18px;
+  --rg-font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --rg-font-body: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.rg-app {
+  min-height: 100vh;
+  background: radial-gradient(circle at 10% 0%, rgba(106, 143, 107, 0.18), transparent 45%),
+    radial-gradient(circle at 100% 100%, rgba(184, 137, 58, 0.12), transparent 50%),
+    var(--rg-bg);
+  color: var(--rg-ink);
+  font-family: var(--rg-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.rg-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* Header */
+.rg-hero {
+  text-align: center;
+  padding: 48px 20px 28px;
+}
+
+.rg-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  font-size: 11px;
+  color: var(--rg-brass);
+  font-weight: 600;
+}
+
+.rg-title {
+  font-family: var(--rg-font-display);
+  font-size: clamp(36px, 9vw, 52px);
+  font-weight: 600;
+  margin: 10px 0 6px;
+  color: var(--rg-green);
+  letter-spacing: 0.5px;
+  line-height: 1.05;
+}
+
+.rg-subtitle {
+  font-size: 14px;
+  color: var(--rg-ink-soft);
+  font-style: italic;
+}
+
+.rg-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px auto;
+  color: var(--rg-brass);
+}
+
+.rg-divider::before,
+.rg-divider::after {
+  content: "";
+  height: 1px;
+  width: 36px;
+  background: var(--rg-brass);
+  opacity: 0.6;
+}
+
+/* Animations */
+@keyframes rg-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rg-slide {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
