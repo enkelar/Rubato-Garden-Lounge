@@ -1,0 +1,32 @@
+.rg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rg-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 520px) {
+  .rg-form-grid { grid-template-columns: 1fr; }
+}
+
+.rg-textarea {
+  resize: vertical;
+  font-family: var(--rg-font-body);
+}
+
+.rg-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.rg-form-actions .rg-btn {
+  flex: none;
+  padding: 10px 20px;
+}

@@ -1,0 +1,234 @@
+.rg-app {
+  background: #efe7d6;
+}
+.rg-admin-nav {
+  border-bottom: 1px solid rgba(30, 61, 47, 0.1);
+  background: #efe7d6;
+}
+
+.rg-admin-nav-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rg-admin-brand {
+  font-family: var(--rg-font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--rg-green);
+}
+
+.rg-admin-nav-links {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+
+.rg-admin-nav-links a {
+  color: var(--rg-ink-soft);
+  text-decoration: none;
+}
+
+.rg-admin-nav-links a.active {
+  color: var(--rg-brass);
+  font-weight: 600;
+}
+
+.rg-admin-main {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.rg-admin-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.rg-admin-title {
+  font-family: var(--rg-font-display);
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--rg-green);
+  margin: 4px 0 0;
+}
+
+.rg-admin-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.rg-admin-actions .rg-btn {
+  padding: 10px 18px;
+  flex: none;
+}
+
+.rg-admin-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.rg-admin-filters .rg-input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.rg-admin-filters select.rg-input {
+  flex: none;
+  min-width: 180px;
+}
+
+.rg-admin-table-wrap {
+  background: var(--rg-card);
+  border-radius: var(--rg-radius);
+  box-shadow: var(--rg-shadow);
+  overflow: hidden;
+  border: 2px solid rgba(30, 61, 47, 0.06);
+}
+
+.rg-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.rg-admin-table thead {
+  background: var(--rg-bg-2);
+}
+
+.rg-admin-table th {
+  text-align: left;
+  padding: 14px 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: var(--rg-ink-soft);
+  font-weight: 600;
+}
+
+.rg-admin-table td {
+  padding: 14px 18px;
+  border-top: 1px solid rgba(30, 61, 47, 0.06);
+  vertical-align: middle;
+}
+
+.rg-right { text-align: right; }
+
+.rg-admin-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rg-admin-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--rg-bg-2);
+}
+
+.rg-admin-product-name {
+  font-weight: 600;
+  color: var(--rg-green);
+}
+
+.rg-admin-cat-cell {
+  color: var(--rg-ink-soft);
+}
+
+.rg-admin-price {
+  font-family: var(--rg-font-display);
+  color: var(--rg-brass);
+  font-weight: 600;
+}
+
+.rg-admin-row-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.rg-chip-btn {
+  border: 1px solid rgba(30, 61, 47, 0.15);
+  background: transparent;
+  color: var(--rg-green);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.rg-chip-btn:hover {
+  background: rgba(30, 61, 47, 0.06);
+}
+
+.rg-chip-btn-danger {
+  border-color: rgba(179, 64, 47, 0.3);
+  color: #b3402f;
+}
+
+.rg-chip-btn-danger:hover {
+  background: rgba(179, 64, 47, 0.06);
+}
+
+.rg-admin-empty {
+  text-align: center;
+  padding: 48px;
+  color: var(--rg-ink-soft);
+}
+
+.rg-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 61, 47, 0.35);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 50;
+  overflow-y: auto;
+}
+
+.rg-modal {
+  background: var(--rg-card);
+  border-radius: var(--rg-radius);
+  box-shadow: var(--rg-shadow);
+  width: 100%;
+  max-width: 640px;
+  padding: 26px 28px;
+  margin: auto;
+}
+
+.rg-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.rg-modal-head h2 {
+  font-family: var(--rg-font-display);
+  font-size: 24px;
+  color: var(--rg-green);
+  margin: 0;
+}
+
+.rg-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  color: var(--rg-ink-soft);
+  cursor: pointer;
+  line-height: 1;
+}

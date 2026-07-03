@@ -31,6 +31,9 @@ export function Footer() {
         </a>
       </div>
       <p className="rg-footer-text">Rubato Garden Lounge · Crafted with care</p>
+      <a href="/auth" className="rg-footer-admin">
+        Admin LogIn
+      </a>
     </footer>
   );
 }

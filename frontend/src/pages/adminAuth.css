@@ -1,0 +1,80 @@
+.rg-auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rg-auth-wrap {
+  width: 100%;
+  max-width: 420px;
+  padding: 60px 20px;
+}
+
+.rg-auth-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.rg-auth-title {
+  font-family: var(--rg-font-display);
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--rg-green);
+  margin: 8px 0 6px;
+}
+
+.rg-auth-subtitle {
+  font-size: 13px;
+  color: var(--rg-ink-soft);
+}
+
+.rg-auth-card {
+  background: var(--rg-card);
+  border-radius: var(--rg-radius);
+  box-shadow: var(--rg-shadow);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid rgba(30, 61, 47, 0.08);
+}
+
+.rg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rg-field-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--rg-ink-soft);
+}
+
+.rg-input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(30, 61, 47, 0.15);
+  background: var(--rg-bg);
+  font-family: var(--rg-font-body);
+  font-size: 14px;
+  color: var(--rg-ink);
+}
+
+.rg-input:focus {
+  outline: none;
+  border-color: var(--rg-green);
+}
+
+.rg-auth-error {
+  font-size: 13px;
+  color: #b3402f;
+  margin: 0;
+}
+
+.rg-auth-submit {
+  margin-top: 4px;
+  width: 100%;
+}
