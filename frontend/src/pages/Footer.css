@@ -4,7 +4,7 @@
   margin-top: 60px;
   padding: 28px 20px 20px;
   text-align: center;
-  border-top: 1px solid rgba(30, 61, 47, 0.1);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .rg-socials {
@@ -20,19 +20,46 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--rg-green);
-  color: #fffdf7;
+  background: #142219;
+  color: var(--rg-accent);
+  border: 2px solid rgba(212, 175, 55, 0.35);
   text-decoration: none;
-  transition: background 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    color 0.2s;
 }
 
 .rg-social:hover {
-  background: var(--rg-brass);
-  transform: translateY(-2px);
+  background: var(--rg-accent-soft);
+  background: rgba(212, 175, 55, 0.08);
+  transform: translateY(-1px);
 }
 
 .rg-footer-text {
   font-size: 12px;
   color: var(--rg-ink-soft);
   font-style: italic;
+}
+
+.rg-footer-admin {
+  display: inline-grid;
+  place-items: center;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #142219;
+  color: var(--rg-accent);
+  text-decoration: none;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    color 0.2s;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.rg-footer-admin:hover {
+  background: rgba(212, 175, 55, 0.08);
+  transform: translateY(-1px);
 }

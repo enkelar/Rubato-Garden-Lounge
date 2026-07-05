@@ -3,10 +3,10 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(246, 241, 231, 0.92);
+  background: #142219;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(30, 61, 47, 0.1);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
 }
 
 .rg-sticky-inner {
@@ -19,39 +19,43 @@
 }
 
 .rg-back {
-  border: none;
-  background: var(--rg-green);
-  color: #fffdf7;
-  width: 38px;
-  height: 38px;
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  background: #142219;
+  color: var(--rg-accent);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  font-size: 18px;
   display: grid;
   place-items: center;
   cursor: pointer;
   text-decoration: none;
-  font-size: 18px;
-  transition: background 0.2s;
-  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  z-index: 10;
 }
 
 .rg-back:hover {
-  background: var(--rg-green-2);
+  background: var(--rg-accent-soft);
 }
 
 .rg-sticky-title {
   font-family: var(--rg-font-display);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
-  color: var(--rg-green);
+  color: var(--rg-ink);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-left: 38px;
 }
 
 .rg-sticky-note {
   font-size: 11px;
-  color: var(--rg-brass);
+  color: var(--rg-accent);
   font-style: italic;
   margin-left: auto;
   flex-shrink: 0;
@@ -61,22 +65,22 @@
 .rg-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-top: 18px;
+  gap: 10px;
+  padding-top: 16px;
   animation: rg-slide 0.45s ease both;
 }
 
 .rg-item {
   display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: 14px;
-  background: var(--rg-card);
-  border-radius: var(--rg-radius);
-  padding: 10px;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 12px;
+  background: #1c2d21;
+  border-radius: 14px;
+  padding: 8px;
   box-shadow: var(--rg-shadow);
   text-decoration: none;
   color: inherit;
-  border: 1px solid rgba(30, 61, 47, 0.05);
+  border: 1.5px solid var(--rg-accent-soft);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
@@ -88,15 +92,15 @@
 }
 
 .rg-item:hover {
-  box-shadow: 0 14px 30px -12px rgba(30, 61, 47, 0.3);
+  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.65);
 }
 
 .rg-item-img {
-  width: 96px;
-  height: 96px;
+  width: 76px;
+  height: 76px;
   object-fit: cover;
-  border-radius: 14px;
-  background: var(--rg-bg-2);
+  border-radius: 11px;
+  background: var(--rg-bg);
 }
 
 .rg-item-body {
@@ -108,17 +112,17 @@
 
 .rg-item-name {
   font-family: var(--rg-font-display);
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 600;
-  color: var(--rg-green);
+  color: var(--rg-ink);
   line-height: 1.15;
-  margin: 0 0 4px;
+  margin: 0 0 3px;
 }
 
 .rg-item-desc {
-  font-size: 12.5px;
+  font-size: 11.5px;
   color: var(--rg-ink-soft);
-  margin: 0 0 6px;
+  margin: 0 0 5px;
   display: -webkit-box;
   line-clamp: 2;
   -webkit-line-clamp: 2;
@@ -127,24 +131,24 @@
 }
 
 .rg-item-price {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--rg-brass);
-  letter-spacing: 0.5px;
+  color: var(--rg-accent);
+  letter-spacing: 0.4px;
 }
 
 .rg-item-img-placeholder {
-  width: 96px;
-  height: 96px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #e8dcc8 0%, #d9cfc0 100%);
+  width: 76px;
+  height: 76px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #efe0b2 0%, #d4af37be 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  color: var(--rg-green);
-  padding: 8px;
+  color: var(--rg-bg);
+  padding: 6px;
   word-break: break-word;
 }

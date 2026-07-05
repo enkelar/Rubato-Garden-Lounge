@@ -55,12 +55,12 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
     <form className="rg-form" onSubmit={handleSubmit}>
       <div className="rg-form-grid">
         <label className="rg-field">
-          <span className="rg-field-label">Name</span>
+          <span className="rg-field-form-label">Name</span>
           <input className="rg-input" required value={form.name} onChange={(e) => set("name", e.target.value)} />
         </label>
 
         <label className="rg-field">
-          <span className="rg-field-label">Category</span>
+          <span className="rg-field-form-label">Category</span>
           <select className="rg-input" required value={form.category} onChange={(e) => set("category", e.target.value)}>
             <option value="" disabled>Select a category</option>
             {categories.map((c) => (
@@ -70,23 +70,23 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
         </label>
 
         <label className="rg-field">
-          <span className="rg-field-label">Price ($)</span>
+          <span className="rg-field-form-label">Price ($)</span>
           <input className="rg-input" type="number" step="0.01" min="0" required value={form.price} onChange={(e) => set("price", e.target.value)} />
         </label>
 
         <label className="rg-field">
-          <span className="rg-field-label">Image URL</span>
+          <span className="rg-field-form-label">Image URL</span>
           <input className="rg-input" value={form.image} onChange={(e) => set("image", e.target.value)} placeholder="https://…" />
         </label>
       </div>
 
       <label className="rg-field">
-        <span className="rg-field-label">Description</span>
+        <span className="rg-field-form-label">Description</span>
         <textarea className="rg-input rg-textarea" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} />
       </label>
 
       <label className="rg-field">
-        <span className="rg-field-label">Details</span>
+        <span className="rg-field-form-label">Details</span>
         <textarea className="rg-input rg-textarea" rows={2} value={form.details} onChange={(e) => set("details", e.target.value)} />
       </label>
 

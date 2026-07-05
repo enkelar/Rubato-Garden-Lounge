@@ -11,12 +11,31 @@
 }
 
 @media (max-width: 520px) {
-  .rg-form-grid { grid-template-columns: 1fr; }
+  .rg-form-grid {
+    grid-template-columns: 1fr;
+  }
 }
+
+.rg-field-form-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--rg-card);
+} 
 
 .rg-textarea {
   resize: vertical;
   font-family: var(--rg-font-body);
+  border-radius: 10px;
+  border: 1.5px solid rgba(20, 34, 25, 0.2);
+  color: #142219;
+  padding: 12px 14px;
+  min-height: 110px;
+}
+
+.rg-textarea::placeholder {
+  color: rgba(20, 34, 25, 0.6);
 }
 
 .rg-form-actions {

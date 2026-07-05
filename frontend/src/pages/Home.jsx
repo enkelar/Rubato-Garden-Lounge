@@ -24,8 +24,9 @@ export function HomeView() {
   }, []);
 
   const handleImageError = (e) => {
-    e.target.style.backgroundColor = "#f0f0f0";
     e.target.style.display = "none";
+    const fallback = e.target.nextElementSibling;
+    if (fallback) fallback.style.display = "flex";
   };
 
   return (
@@ -44,21 +45,31 @@ export function HomeView() {
           <div>No categories found.</div>
         )}
         <div className="rg-grid">
-          {categories.map((cat) => (
-            <Link key={cat.slug} to={`/menu/${cat.slug}`} className="rg-card">
-              {cat.cover ? (
+          {categories.map((cat, i) => (
+            <Link
+              key={cat.slug}
+              to={`/menu/${cat.slug}`}
+              className="rg-card"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              {cat.cover && (
                 <img
                   src={cat.cover}
                   alt={`${cat.name} category`}
                   className="rg-card-img"
                   onError={handleImageError}
                 />
-              ) : (
-                <div className="rg-card-img-placeholder">{cat.name}</div>
               )}
+              <div
+                className="rg-card-img-placeholder"
+                style={{ display: cat.cover ? "none" : "flex" }}
+              >
+                <span className="rg-card-placeholder-name">{cat.name}</span>
+              </div>
               <div className="rg-card-overlay" />
+              <div className="rg-card-shine" />
               <div className="rg-card-content">
-                <div className="rg-card-icon">{cat.icon}</div>
+                {/* <div className="rg-card-icon">{cat.icon}</div> */}
                 <div className="rg-card-name">{cat.name}</div>
                 {cat.note && <div className="rg-card-note">{cat.note}</div>}
               </div>

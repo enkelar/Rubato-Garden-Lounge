@@ -28,35 +28,63 @@ export function AdminAuth() {
     }
   }
 
-  return (
-    <div className="rg-app rg-auth-page">
-      <main className="rg-auth-wrap">
-        <div className="rg-auth-head">
-          <div className="rg-eyebrow">Staff Area</div>
-          <h1 className="rg-auth-title">Sign in</h1>
-          <p className="rg-auth-subtitle">Admin access only — accounts are provisioned by the team.</p>
-        </div>
+ return (
+  <div className="rg-app rg-auth-page">
+    <main className="rg-auth-wrap">
+      <div className="rg-auth-head">
+        <div className="rg-eyebrow">Staff Area</div>
+        <h1 className="rg-auth-title">Sign in</h1>
+        <p className="rg-auth-subtitle">
+          Admin access only — accounts are provisioned by the team.
+        </p>
+      </div>
 
-        <form className="rg-auth-card" onSubmit={handleSubmit}>
-          <label className="rg-field">
-            <span className="rg-field-label">Email</span>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="rg-input" autoComplete="username" />
-          </label>
+      <form className="rg-auth-card" onSubmit={handleSubmit}>
+        <label className="rg-field">
+          <span className="rg-field-label">Email</span>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="rg-input"
+            autoComplete="username"
+          />
+        </label>
 
-          <label className="rg-field">
-            <span className="rg-field-label">Password</span>
-            <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="rg-input" autoComplete="current-password" />
-          </label>
+        <label className="rg-field">
+          <span className="rg-field-label">Password</span>
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="rg-input"
+            autoComplete="current-password"
+          />
+        </label>
 
-          {error && <p className="rg-auth-error">{error}</p>}
+        {error && <p className="rg-auth-error">{error}</p>}
 
-          <button type="submit" className="rg-btn rg-btn-primary rg-auth-submit" disabled={busy}>
-            {busy ? "Signing in…" : "Sign in"}
-          </button>
-        </form>
-      </main>
-    </div>
-  );
+        <button
+          type="submit"
+          className="rg-btn rg-btn-primary rg-auth-submit"
+          disabled={busy}
+        >
+          {busy ? "Signing in…" : "Sign in"}
+        </button>
+
+        <button
+          type="button"
+          className="rg-btn rg-auth-back"
+          onClick={() => navigate("/")}
+        >
+          Go back
+        </button>
+      </form>
+    </main>
+  </div>
+);
 }
 
 export default AdminAuth;

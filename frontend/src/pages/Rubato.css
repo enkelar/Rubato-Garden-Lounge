@@ -1,25 +1,42 @@
 /* Rubato Garden Lounge — design system (plain CSS, no Tailwind) */
+/* Dark forest green + gold accent theme */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
 :root {
-  --rg-bg: #f6f1e7;
-  --rg-bg-2: #efe7d6;
-  --rg-ink: #1f2a23; 
-  --rg-ink-soft: #4a5a4e;
-  --rg-green: #1e3d2f;
-  --rg-green-2: #2c5a44;
-  --rg-leaf: #6a8f6b;
-  --rg-brass: #b8893a;
-  --rg-brass-2: #d9a85a;
-  --rg-card: #fffdf7;
-  --rg-shadow: 0 10px 30px -12px rgba(30, 61, 47, 0.25);
+  --rg-bg: #142219;
+  --rg-bg-2: #1b2a20;
+  --rg-ink: #f5f5f5;
+  --rg-ink-soft: rgba(245, 245, 245, 0.74);
+  --rg-green: #1f2f22;
+  --rg-green-2: #2e442f;
+  --rg-leaf: #9ebd91;
+  --rg-brass: #e4bb85;
+  --rg-brass-2: #e5c56a;
+  --rg-card: #f7efe0ee;
+  --rg-card-light: #f8f2e5;
+  --rg-card-muted: #223326;
+  --rg-accent: #e4bb85ec;
+  --rg-accent-soft: rgba(233, 215, 149, 0.878);
+  --rg-shadow: 0 16px 40px -18px rgba(0, 0, 0, 0.8);
   --rg-radius: 18px;
-  --rg-font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-  --rg-font-body: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Fonts */
+  --rg-font-display: "Cormorant Garamond", serif;
+  --rg-font-body: "Inter", "Segoe UI", sans-serif;
 }
 
 .rg-app {
   min-height: 100vh;
-  background: radial-gradient(circle at 10% 0%, rgba(106, 143, 107, 0.18), transparent 45%),
-    radial-gradient(circle at 100% 100%, rgba(184, 137, 58, 0.12), transparent 50%),
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(212, 175, 55, 0.12),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(158, 189, 145, 0.12),
+      transparent 50%
+    ),
     var(--rg-bg);
   color: var(--rg-ink);
   font-family: var(--rg-font-body);
@@ -42,18 +59,18 @@
   text-transform: uppercase;
   letter-spacing: 0.32em;
   font-size: 11px;
-  color: var(--rg-brass);
+  color: var(--rg-accent);
   font-weight: 600;
 }
 
 .rg-title {
   font-family: var(--rg-font-display);
-  font-size: clamp(36px, 9vw, 52px);
-  font-weight: 600;
-  margin: 10px 0 6px;
-  color: var(--rg-green);
-  letter-spacing: 0.5px;
-  line-height: 1.05;
+  font-size: clamp(42px, 9vw, 60px);
+  font-weight: 650;
+  margin: 10px 0 8px;
+  color: var(--rg-ink);
+  letter-spacing: 1px;
+  line-height: 1;
 }
 
 .rg-subtitle {
@@ -68,7 +85,7 @@
   justify-content: center;
   gap: 10px;
   margin: 18px auto;
-  color: var(--rg-brass);
+  color: var(--rg-accent);
 }
 
 .rg-divider::before,
@@ -76,8 +93,19 @@
   content: "";
   height: 1px;
   width: 36px;
-  background: var(--rg-brass);
-  opacity: 0.6;
+  background: var(--rg-accent);
+  opacity: 0.5;
+}
+
+.rg-loading,
+.rg-error {
+  text-align: center;
+  padding: 20px;
+  color: var(--rg-ink-soft);
+}
+
+.rg-error {
+  color: #ff8f7a;
 }
 
 /* Animations */
