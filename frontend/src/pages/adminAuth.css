@@ -19,7 +19,7 @@
   font-family: var(--rg-font-display);
   font-size: 40px;
   font-weight: 600;
-  color: white !important;
+  color: var(--rg-ink);
   margin: 8px 0 6px;
 }
 
@@ -29,14 +29,14 @@
 }
 
 .rg-auth-card {
-  background: var(--rg-ink-soft);
+  background: var(--rg-green-2);
   border-radius: var(--rg-radius);
   box-shadow: var(--rg-shadow);
   padding: 28px 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border: 1px solid rgba(30, 61, 47, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.18);
 }
 
 .rg-field {
@@ -45,18 +45,19 @@
   gap: 6px;
 }
 
+/* Labels now need to read on a dark card — use the lighter leaf tone */
 .rg-field-label {
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: 11px;
   font-weight: 600;
-  color: var(--ink-card-muted);
+  color: var(--rg-leaf);
 }
 
 .rg-input {
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1.5px solid rgba(30, 61, 47, 0.15);
+  border: 1.5px solid rgba(212, 175, 55, 0.2);
   background: var(--rg-bg);
   font-family: var(--rg-font-body);
   font-size: 14px;
@@ -65,16 +66,56 @@
 
 .rg-input:focus {
   outline: none;
-  border-color: var(--rg-green);
+  border-color: var(--rg-accent);
 }
 
 .rg-auth-error {
   font-size: 13px;
-  color: #b3402f;
+  color: #ff8f7a;
   margin: 0;
 }
 
 .rg-auth-submit {
   margin-top: 4px;
   width: 100%;
+}
+
+.rg-auth-btn {
+  flex: 1;
+  padding: 13px 18px;
+  border-radius: 13px;
+  border: none;
+  font-family: var(--rg-font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.rg-auth-btn:active {
+  transform: scale(0.97);
+}
+
+.rg-auth-btn-primary {
+  background: var(--rg-accent);
+  color: var(--rg-bg);
+}
+
+.rg-auth-btn-primary:hover {
+  background: var(--rg-accent-soft);
+}
+
+.rg-auth-btn-ghost {
+  background: rgba(245, 245, 245, 0.06);
+  color: var(--rg-ink);
+  border: 1.5px solid rgba(212, 175, 55, 0.4);
+}
+
+.rg-auth-btn-ghost:hover {
+  border-color: var(--rg-accent);
+  color: var(--rg-accent);
+  background: rgba(212, 175, 55, 0.12);
 }

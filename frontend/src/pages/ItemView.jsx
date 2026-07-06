@@ -1,8 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-import Footer from "./Footer";
-import "./Item.css";
-import "./Rubato.css";
 import { useState, useEffect } from "react";
+import Footer from "./Footer";
+import "./Rubato.css";
+import "./Item.css";
 
 function useItemPage(slug, itemId) {
   const [cat, setCat] = useState(null);
@@ -33,7 +33,7 @@ function useItemPage(slug, itemId) {
 
 export function ItemView() {
   const { slug, itemId } = useParams();
-  const { cat, item, shareUrl, error, loading } = useItemPage(slug, itemId);
+  const { cat, item, error, loading } = useItemPage(slug, itemId);
 
   const handleImageError = (e) => {
     e.target.style.display = "none";
@@ -104,14 +104,7 @@ export function ItemView() {
             >
               Back to {cat?.name || "Menu"}
             </Link>
-            <a
-              href={shareUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="rg-btn rg-btn-primary"
-            >
-              Share
-            </a>
+           
           </div>
         </div>
         <Footer />

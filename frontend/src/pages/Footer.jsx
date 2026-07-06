@@ -1,5 +1,5 @@
-import './Footer.css';
 import './Rubato.css';
+import './Footer.css';
 
 export function Footer() {
   return (

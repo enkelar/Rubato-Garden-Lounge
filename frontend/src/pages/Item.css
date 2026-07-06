@@ -129,15 +129,6 @@
   transform: scale(0.97);
 }
 
-.rg-btn-primary {
-  background: var(--rg-accent);
-  color: var(--rg-bg);
-}
-
-.rg-btn-primary:hover {
-  background: var(--rg-accent-soft);
-}
-
 .rg-btn-ghost {
   background: rgba(245, 245, 245, 0.06);
   color: var(--rg-ink);

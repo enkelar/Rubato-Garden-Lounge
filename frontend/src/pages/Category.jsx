@@ -1,8 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-import Footer from "./Footer";
-import "./Category.css";
-import "./Rubato.css";
 import { useState, useEffect } from "react";
+import Footer from "./Footer";
+import "./Rubato.css";
+import "./Category.css";
 
 export function CategoryView() {
   const [cat, setCat] = useState(null);

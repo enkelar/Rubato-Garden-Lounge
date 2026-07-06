@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import Footer from "./Footer";
 import { useState, useEffect } from "react";
-import "./Home.css";
+import Footer from "./Footer";
 import "./Rubato.css";
+import "./Home.css";
 
 export function HomeView() {
   const [categories, setCategories] = useState([]);

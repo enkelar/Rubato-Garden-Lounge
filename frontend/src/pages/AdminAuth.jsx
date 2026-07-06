@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import "./AdminAuth.css";
 import "./Rubato.css";
+import "./adminAuth.css";
 
 export function AdminAuth() {
   const { login, isAuthenticated } = useAuth();
@@ -67,20 +67,20 @@ export function AdminAuth() {
         {error && <p className="rg-auth-error">{error}</p>}
 
         <button
-          type="submit"
-          className="rg-btn rg-btn-primary rg-auth-submit"
-          disabled={busy}
-        >
-          {busy ? "Signing in…" : "Sign in"}
-        </button>
+  type="submit"
+  className="rg-auth-btn rg-auth-btn-primary rg-auth-submit"
+  disabled={busy}
+>
+  {busy ? "Signing in…" : "Sign in"}
+</button>
 
-        <button
-          type="button"
-          className="rg-btn rg-auth-back"
-          onClick={() => navigate("/")}
-        >
-          Go back
-        </button>
+<button
+  type="button"
+  className="rg-auth-btn rg-auth-btn-ghost rg-auth-back"
+  onClick={() => navigate("/")}
+>
+  Go back
+</button>
       </form>
     </main>
   </div>
