@@ -20,9 +20,39 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
   );
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   function set(key, value) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  async function handleFileChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setError(null);
+    setUploading(true);
+    try {
+      // Ask backend for a presigned R2 PUT URL for this file's content type
+      const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type);
+
+      //Upload the raw file bytes straight to R2 (bypasses the server entirely)
+      const putRes = await fetch(uploadURL, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+
+      if (!putRes.ok) throw new Error("Image upload to storage failed.");
+
+      //Store just the public URL
+      set("image", publicUrl);
+    } catch (err) {
+      setError(err.message || "Image upload failed");
+    } finally {
+      setUploading(false);
+      e.target.value = ""; // allow re-selecting the same file later
+    }
   }
 
   async function handleSubmit(e) {
@@ -75,10 +105,23 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
         </label>
 
         <label className="rg-field">
-          <span className="rg-field-form-label">Image URL</span>
-          <input className="rg-input" value={form.image} onChange={(e) => set("image", e.target.value)} placeholder="https://…" />
+          <span className="rg-field-form-label">Photo</span>
+          <input
+            className="rg-input rg-file-input"
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            onChange={handleFileChange}
+            disabled={uploading}
+          />
+          {uploading && <span className="rg-upload-status">Uploading…</span>}
         </label>
       </div>
+
+      {form.image && (
+        <div className="rg-image-preview">
+          <img src={form.image} alt="Preview" />
+        </div>
+      )}
 
       <label className="rg-field">
         <span className="rg-field-form-label">Description</span>
@@ -94,7 +137,7 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
 
       <div className="rg-form-actions">
         <button type="button" className="rg-btn rg-btn-ghost" onClick={onCancel}>Cancel</button>
-        <button type="submit" className="rg-btn rg-btn-primary" disabled={busy}>
+        <button type="submit" className="rg-btn rg-btn-primary" disabled={busy || uploading}>
           {busy ? "Saving…" : initial ? "Save changes" : "Create product"}
         </button>
       </div>

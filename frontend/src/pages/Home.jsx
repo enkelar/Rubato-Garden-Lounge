@@ -69,7 +69,6 @@ export function HomeView() {
               <div className="rg-card-overlay" />
               <div className="rg-card-shine" />
               <div className="rg-card-content">
-                {/* <div className="rg-card-icon">{cat.icon}</div> */}
                 <div className="rg-card-name">{cat.name}</div>
                 {cat.note && <div className="rg-card-note">{cat.note}</div>}
               </div>
