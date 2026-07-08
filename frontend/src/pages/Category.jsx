@@ -1,17 +1,21 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Footer from "./Footer";
+import { useLanguage } from "../context/LanguageContext";
 import "./Rubato.css";
 import "./Category.css";
 
 export function CategoryView() {
+  const { language, t } = useLanguage();
   const [cat, setCat] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { slug } = useParams();
 
   useEffect(() => {
-    fetch(`/api/menu/${slug}`)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    fetch(`/api/menu/${slug}?lang=${language}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch category");
         return res.json();
@@ -22,9 +26,8 @@ export function CategoryView() {
         setError(err.message);
       })
       .finally(() => setLoading(false));
-  }, [slug]);
+  }, [slug, language]);
 
-  // Handle image error by hiding the image and showing a placeholder
   const handleImageError = (e) => {
     e.target.style.display = "none";
     if (e.target.nextElementSibling) {
@@ -48,10 +51,10 @@ export function CategoryView() {
 
       <main className="rg-container">
         {error && (
-          <div className="rg-error">Failed to load products: {error}</div>
+          <div className="rg-error">{t("category.error")} {error}</div>
         )}
-        {loading && <div className="rg-loading">Loading products...</div>}
-        {!loading && !cat?.items && !error && <div>No products found.</div>}
+        {loading && <div className="rg-loading">{t("category.loading")}</div>}
+        {!loading && !cat?.items && !error && <div>{t("category.empty")}</div>}
         <div className="rg-list">
           {cat?.items?.map((item) => (
             <Link

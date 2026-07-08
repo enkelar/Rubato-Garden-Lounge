@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
+import LanguageToggle from "../components/LanguageToggle";
 import "./Rubato.css";
 import "./adminAuth.css";
 
 export function AdminAuth() {
   const { login, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,18 +33,21 @@ export function AdminAuth() {
 
  return (
   <div className="rg-app rg-auth-page">
+    <div className="rg-auth-lang">
+      <LanguageToggle />
+    </div>
     <main className="rg-auth-wrap">
       <div className="rg-auth-head">
-        <div className="rg-eyebrow">Staff Area</div>
-        <h1 className="rg-auth-title">Sign in</h1>
+        <div className="rg-eyebrow">{t("auth.staffArea")}</div>
+        <h1 className="rg-auth-title">{t("auth.signIn")}</h1>
         <p className="rg-auth-subtitle">
-          Admin access only — accounts are provisioned by the team.
+          {t("auth.subtitle")}
         </p>
       </div>
 
       <form className="rg-auth-card" onSubmit={handleSubmit}>
         <label className="rg-field">
-          <span className="rg-field-label">Email</span>
+          <span className="rg-field-label">{t("auth.email")}</span>
           <input
             type="email"
             required
@@ -53,7 +59,7 @@ export function AdminAuth() {
         </label>
 
         <label className="rg-field">
-          <span className="rg-field-label">Password</span>
+          <span className="rg-field-label">{t("auth.password")}</span>
           <input
             type="password"
             required
@@ -71,7 +77,7 @@ export function AdminAuth() {
   className="rg-auth-btn rg-auth-btn-primary rg-auth-submit"
   disabled={busy}
 >
-  {busy ? "Signing in…" : "Sign in"}
+  {busy ? t("auth.signingIn") : t("auth.signIn")}
 </button>
 
 <button
@@ -79,7 +85,7 @@ export function AdminAuth() {
   className="rg-auth-btn rg-auth-btn-ghost rg-auth-back"
   onClick={() => navigate("/")}
 >
-  Go back
+  {t("auth.goBack")}
 </button>
       </form>
     </main>

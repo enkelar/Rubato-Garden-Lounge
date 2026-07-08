@@ -1,20 +1,35 @@
 import { useState } from "react";
 import { useAdminApi } from "../services/adminApi";
+import { useLanguage } from "../context/LanguageContext";
 import "./adminProductForm.css";
 
-const EMPTY = { name: "", category: "", price: "", image: "", description: "", details: "" };
+const EMPTY = {
+  name: "",
+  nameSq: "",
+  category: "",
+  price: "",
+  image: "",
+  description: "",
+  descriptionSq: "",
+  details: "",
+  detailsSq: "",
+};
 
 export function AdminProductForm({ initial, categories, onDone, onCancel }) {
   const api = useAdminApi();
+  const { t } = useLanguage();
   const [form, setForm] = useState(() =>
     initial
       ? {
           name: initial.name || "",
+          nameSq: initial.nameSq || "",
           category: initial.category?._id || initial.category || "",
           price: initial.price ?? "",
           image: initial.image || "",
           description: initial.description || "",
+          descriptionSq: initial.descriptionSq || "",
           details: initial.details || "",
+          detailsSq: initial.detailsSq || "",
         }
       : { ...EMPTY, category: categories[0]?._id || "" }
   );
@@ -33,10 +48,8 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
     setError(null);
     setUploading(true);
     try {
-      // Ask backend for a presigned R2 PUT URL for this file's content type
       const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type);
 
-      //Upload the raw file bytes straight to R2 (bypasses the server entirely)
       const putRes = await fetch(uploadURL, {
         method: "PUT",
         headers: { "Content-Type": file.type },
@@ -45,13 +58,12 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
 
       if (!putRes.ok) throw new Error("Image upload to storage failed.");
 
-      //Store just the public URL
       set("image", publicUrl);
     } catch (err) {
       setError(err.message || "Image upload failed");
     } finally {
       setUploading(false);
-      e.target.value = ""; // allow re-selecting the same file later
+      e.target.value = "";
     }
   }
 
@@ -60,7 +72,7 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
     setError(null);
 
     if (!form.name || !form.category || !form.price) {
-      setError("Name, category, and price are required.");
+      setError(t("form.requiredError"));
       return;
     }
 
@@ -85,14 +97,24 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
     <form className="rg-form" onSubmit={handleSubmit}>
       <div className="rg-form-grid">
         <label className="rg-field">
-          <span className="rg-field-form-label">Name</span>
+          <span className="rg-field-form-label">{t("form.name")}</span>
           <input className="rg-input" required value={form.name} onChange={(e) => set("name", e.target.value)} />
         </label>
 
         <label className="rg-field">
-          <span className="rg-field-form-label">Category</span>
+        <span className="rg-field-form-label rg-field-label-sq">{t("form.name")} (SQ)</span>
+        <input
+          className="rg-input rg-input-sq"
+          placeholder="Emri në shqip (opsionale)"
+          value={form.nameSq}
+          onChange={(e) => set("nameSq", e.target.value)}
+        />
+      </label>
+
+        <label className="rg-field">
+          <span className="rg-field-form-label">{t("form.category")}</span>
           <select className="rg-input" required value={form.category} onChange={(e) => set("category", e.target.value)}>
-            <option value="" disabled>Select a category</option>
+            <option value="" disabled>{t("form.selectCategory")}</option>
             {categories.map((c) => (
               <option key={c._id} value={c._id}>{c.name}</option>
             ))}
@@ -100,12 +122,12 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
         </label>
 
         <label className="rg-field">
-          <span className="rg-field-form-label">Price ($)</span>
+          <span className="rg-field-form-label">{t("form.price")}</span>
           <input className="rg-input" type="number" step="0.01" min="0" required value={form.price} onChange={(e) => set("price", e.target.value)} />
         </label>
 
         <label className="rg-field">
-          <span className="rg-field-form-label">Photo</span>
+          <span className="rg-field-form-label">{t("form.photo")}</span>
           <input
             className="rg-input rg-file-input"
             type="file"
@@ -123,22 +145,45 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
         </div>
       )}
 
+
       <label className="rg-field">
-        <span className="rg-field-form-label">Description</span>
+        <span className="rg-field-form-label">{t("form.description")}</span>
         <textarea className="rg-input rg-textarea" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} />
       </label>
 
       <label className="rg-field">
-        <span className="rg-field-form-label">Details</span>
+        <span className="rg-field-form-label rg-field-label-sq">{t("form.description")} (SQ)</span>
+        <textarea
+          className="rg-input rg-textarea rg-input-sq"
+          rows={3}
+          placeholder="Përshkrimi në shqip (opsionale)"
+          value={form.descriptionSq}
+          onChange={(e) => set("descriptionSq", e.target.value)}
+        />
+      </label>
+
+      <label className="rg-field">
+        <span className="rg-field-form-label">{t("form.details")}</span>
         <textarea className="rg-input rg-textarea" rows={2} value={form.details} onChange={(e) => set("details", e.target.value)} />
+      </label>
+
+      <label className="rg-field">
+        <span className="rg-field-form-label rg-field-label-sq">{t("form.details")} (SQ)</span>
+        <textarea
+          className="rg-input rg-textarea rg-input-sq"
+          rows={2}
+          placeholder="Detaje në shqip (opsionale)"
+          value={form.detailsSq}
+          onChange={(e) => set("detailsSq", e.target.value)}
+        />
       </label>
 
       {error && <p className="rg-auth-error">{error}</p>}
 
       <div className="rg-form-actions">
-        <button type="button" className="rg-btn rg-btn-ghost" onClick={onCancel}>Cancel</button>
+        <button type="button" className="rg-btn rg-btn-ghost" onClick={onCancel}>{t("form.cancel")}</button>
         <button type="submit" className="rg-btn rg-btn-primary" disabled={busy || uploading}>
-          {busy ? "Saving…" : initial ? "Save changes" : "Create product"}
+          {busy ? t("form.saving") : initial ? t("form.saveChanges") : t("form.createProduct")}
         </button>
       </div>
     </form>

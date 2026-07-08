@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { useAdminApi } from "../services/adminApi";
 import AdminProductForm from "../components/AdminProductForm";
+import LanguageToggle from "../components/LanguageToggle";
 import "./Rubato.css";
 import "./adminDashboard.css";
 
 export function AdminDashboard() {
   const { logout } = useAuth();
+  const { language, t } = useLanguage();
   const navigate = useNavigate();
   const api = useAdminApi();
 
@@ -41,9 +44,13 @@ export function AdminDashboard() {
     loadData();
   }, [api]);
 
+  const localizedName = (obj) =>
+    language === "sq" && obj?.nameSq ? obj.nameSq : obj?.name;
+
   const categoryName = (catId) => {
     const id = catId?._id || catId;
-    return categories.find((c) => c._id === id)?.name || "—";
+    const cat = categories.find((c) => c._id === id);
+    return cat ? localizedName(cat) : "—";
   };
 
   const filtered = useMemo(() => {
@@ -75,12 +82,13 @@ export function AdminDashboard() {
     <div className="rg-app">
       <header className="rg-admin-nav">
         <div className="rg-admin-nav-inner">
-          <div className="rg-admin-brand">Rubato</div>
+          <div className="rg-admin-brand">{t("admin.brand")}</div>
           <nav className="rg-admin-nav-links">
-            <Link to="/">Home</Link>
+            <Link to="/">{t("admin.home")}</Link>
             <Link to="/admin" className="active">
-              Admin
+              {t("admin.admin")}
             </Link>
+            <LanguageToggle />
           </nav>
         </div>
       </header>
@@ -88,21 +96,21 @@ export function AdminDashboard() {
       <main className="rg-admin-main">
         <div className="rg-admin-head">
           <div>
-            <div className="rg-eyebrow">Admin</div>
-            <h1 className="rg-admin-title">Menu management</h1>
+            <div className="rg-eyebrow">{t("admin.eyebrow")}</div>
+            <h1 className="rg-admin-title">{t("admin.title")}</h1>
           </div>
           <div className="rg-admin-actions">
             <Link to="/" className="rg-btn rg-btn-ghost">
-              View menu
+              {t("admin.viewMenu")}
             </Link>
             <button className="rg-btn rg-btn-ghost" onClick={handleSignOut}>
-              Sign out
+              {t("admin.signOut")}
             </button>
             <button
               className="rg-btn rg-btn-primary"
               onClick={() => setEditing("new")}
             >
-              + New product
+              {t("admin.newProduct")}
             </button>
           </div>
         </div>
@@ -110,7 +118,7 @@ export function AdminDashboard() {
         <div className="rg-admin-filters">
           <input
             className="rg-input"
-            placeholder="Search by name…"
+            placeholder={t("admin.searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -119,26 +127,26 @@ export function AdminDashboard() {
             value={filterCat}
             onChange={(e) => setFilterCat(e.target.value)}
           >
-            <option value="all">All categories</option>
+            <option value="all">{t("admin.allCategories")}</option>
             {categories.map((c) => (
               <option key={c._id} value={c._id}>
-                {c.name}
+                {localizedName(c)}
               </option>
             ))}
           </select>
         </div>
 
         {error && <div className="rg-error">{error}</div>}
-        {loading && <div className="rg-loading">Loading products…</div>}
+        {loading && <div className="rg-loading">{t("admin.loadingProducts")}</div>}
 
         {!loading && (
           <div className="rg-admin-table-wrap">
             <table className="rg-admin-table">
               <thead>
                 <tr>
-                  <th>Product</th>
-                  <th>Category</th>
-                  <th className="rg-right">Price</th>
+                  <th>{t("admin.thProduct")}</th>
+                  <th>{t("admin.thCategory")}</th>
+                  <th className="rg-right">{t("admin.thPrice")}</th>
                   <th />
                 </tr>
               </thead>
@@ -156,7 +164,7 @@ export function AdminDashboard() {
                         ) : (
                           <div className="rg-admin-thumb rg-admin-thumb-empty" />
                         )}
-                        <div className="rg-admin-product-name">{p.name}</div>
+                        <div className="rg-admin-product-name">{localizedName(p)}</div>
                       </div>
                     </td>
                     <td className="rg-admin-cat-cell">
@@ -171,13 +179,13 @@ export function AdminDashboard() {
                           className="rg-chip-btn"
                           onClick={() => setEditing(p)}
                         >
-                          Edit
+                          {t("admin.edit")}
                         </button>
                         <button
                           className="rg-chip-btn rg-chip-btn-danger"
                           onClick={() => handleDelete(p)}
                         >
-                          Delete
+                          {t("admin.delete")}
                         </button>
                       </div>
                     </td>
@@ -186,7 +194,7 @@ export function AdminDashboard() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan={4} className="rg-admin-empty">
-                      No products match your filters.
+                      {t("admin.noMatch")}
                     </td>
                   </tr>
                 )}
@@ -206,7 +214,9 @@ export function AdminDashboard() {
           <div className="rg-modal">
             <div className="rg-modal-head">
               <h2>
-                {editing === "new" ? "New product" : `Edit · ${editing.name}`}
+                {editing === "new"
+                  ? t("admin.newProductTitle")
+                  : `${t("admin.editProductTitle")} ${editing.name}`}
               </h2>
               <button
                 className="rg-modal-close"

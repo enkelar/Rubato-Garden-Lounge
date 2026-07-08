@@ -1,0 +1,26 @@
+.rg-lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: #142219;
+  color: var(--rg-ink-soft);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.rg-lang-toggle:hover {
+  border-color: var(--rg-accent);
+}
+
+.rg-lang-active {
+  color: var(--rg-accent);
+}
+
+.rg-lang-sep {
+  opacity: 0.4;
+}

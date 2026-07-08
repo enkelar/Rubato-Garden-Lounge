@@ -1,7 +1,10 @@
 import './Rubato.css';
 import './Footer.css';
+import {useLanguage} from "../context/LanguageContext";
+import LanguageToggle from "../components/LanguageToggle";
 
 export function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="rg-footer">
       <div className="rg-socials">
@@ -30,7 +33,10 @@ export function Footer() {
           </svg>
         </a>
       </div>
-      <p className="rg-footer-text">Rubato Garden Lounge · Crafted with care</p>
+      <div className="rg-footer-lang">
+        <LanguageToggle />
+      </div>
+      <p className="rg-footer-text">{t("footer.tagline")}</p>
       <a href="/auth" className="rg-footer-admin">
         Admin LogIn
       </a>

@@ -1,17 +1,20 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Footer from "./Footer";
+import { useLanguage } from "../context/LanguageContext";
 import "./Rubato.css";
 import "./Item.css";
 
-function useItemPage(slug, itemId) {
+function useItemPage(slug, itemId, language) {
   const [cat, setCat] = useState(null);
   const [item, setItem] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/menu/${slug}/${itemId}`)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    fetch(`/api/menu/${slug}/${itemId}?lang=${language}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch item");
         return res.json();
@@ -25,7 +28,7 @@ function useItemPage(slug, itemId) {
         setError(err.message);
       })
       .finally(() => setLoading(false));
-  }, [slug, itemId]);
+  }, [slug, itemId, language]);
 
   const shareUrl = `/menu/${cat?.slug}/${item?.id}`;
   return { cat, item, shareUrl, error, loading };
@@ -33,7 +36,8 @@ function useItemPage(slug, itemId) {
 
 export function ItemView() {
   const { slug, itemId } = useParams();
-  const { cat, item, error, loading } = useItemPage(slug, itemId);
+  const { language, t } = useLanguage();
+  const { cat, item, error, loading } = useItemPage(slug, itemId, language);
 
   const handleImageError = (e) => {
     e.target.style.display = "none";
@@ -52,7 +56,7 @@ export function ItemView() {
           ×
         </Link>
       <div className="rg-detail-hero">
-        {loading && <div className="rg-loading">Loading product...</div>}
+        {loading && <div className="rg-loading">{t("item.loading")}</div>}
         {!loading && item && item.image && (
           <img
             src={item.image}
@@ -72,13 +76,13 @@ export function ItemView() {
           </div>
         )}
         {!loading && !item && !error && (
-          <div className="rg-loading">Product not found.</div>
+          <div className="rg-loading">{t("item.notFound")}</div>
         )}
       </div>
 
       <main className="rg-container">
         {error && (
-          <div className="rg-error">Failed to load product: {error}</div>
+          <div className="rg-error">{t("item.error")} {error}</div>
         )}
 
         <div className="rg-detail-body">
@@ -86,13 +90,13 @@ export function ItemView() {
           <div className="rg-detail-price">{item?.price || ""}</div>
 
           <div className="rg-section">
-            <div className="rg-section-label">What it contains</div>
+            <div className="rg-section-label">{t("item.contains")}</div>
             <p>{item?.description || ""}</p>
           </div>
 
           {item?.details && (
             <div className="rg-section">
-              <div className="rg-section-label">Details</div>
+              <div className="rg-section-label">{t("item.details")}</div>
               <p>{item.details}</p>
             </div>
           )}
@@ -102,7 +106,7 @@ export function ItemView() {
               to={cat ? `/menu/${cat.slug}` : "/"}
               className="rg-btn rg-btn-ghost"
             >
-              Back to {cat?.name || "Menu"}
+              {t("item.backTo")} {cat?.name || t("item.menu")}
             </Link>
            
           </div>

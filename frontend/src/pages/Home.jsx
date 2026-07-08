@@ -1,16 +1,20 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Footer from "./Footer";
+import { useLanguage } from "../context/LanguageContext";
 import "./Rubato.css";
 import "./Home.css";
 
 export function HomeView() {
+  const { language, t } = useLanguage();
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/menu`)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
+    fetch(`/api/menu?lang=${language}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch categories");
         return res.json();
@@ -21,7 +25,7 @@ export function HomeView() {
         setError(err.message);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [language]);
 
   const handleImageError = (e) => {
     e.target.style.display = "none";
@@ -32,17 +36,17 @@ export function HomeView() {
   return (
     <div className="rg-app">
       <header className="rg-hero">
-        <div className="rg-eyebrow">Welcome to</div>
+        <div className="rg-eyebrow">{t("home.eyebrow")}</div>
         <h1 className="rg-title">Rubato</h1>
-        <div className="rg-subtitle">Garden Lounge · Digital Menu</div>
+        <div className="rg-subtitle">{t("home.subtitle")}</div>
         <div className="rg-divider">✦</div>
       </header>
 
       <main className="rg-container">
-        {error && <div className="rg-error">Failed to load menu: {error}</div>}
-        {loading && <div className="rg-loading">Loading menu...</div>}
+        {error && <div className="rg-error">{t("home.error")} {error}</div>}
+        {loading && <div className="rg-loading">{t("home.loading")}</div>}
         {!loading && categories.length === 0 && !error && (
-          <div>No categories found.</div>
+          <div>{t("home.empty")}</div>
         )}
         <div className="rg-grid">
           {categories.map((cat, i) => (

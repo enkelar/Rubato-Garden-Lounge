@@ -71,3 +71,12 @@
   height: 100%;
   object-fit: cover;
 }
+
+.rg-input-sq {
+  border-color: rgba(212, 175, 55, 0.35);
+  opacity: 0.92;
+}
+
+.rg-field-label-sq {
+  color: var(--rg-leaf);
+}

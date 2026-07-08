@@ -6,11 +6,33 @@ function generateSlug(name) {
     return name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
 }
 
+// Returns the Albanian value if lang is 'sq' and it's set, otherwise falls back to English
+function pick(base, sq, lang){
+    if(lang === 'sq' && sq) return sq;
+    return base;
+}
+
+function getLang(req){
+    return req.query.lang === 'sq' ? 'sq' : 'en';
+}
+
 // GET /api/menu - get all categories home page
 export const getMenuData = async (req, res) => {
     try {
+        const lang = getLang(req);
         const categories = await categoryModel.find().sort({ name: 1 });
-        res.status(200).json({ categories });
+
+        const localized = categories.map(cat => ({
+            _id: cat._id,
+            name: pick(cat.name, cat.nameSq, lang),
+            slug: cat.slug,
+            description: pick(cat.description, cat.descriptionSq, lang),
+            icon: cat.icon,
+            cover: cat.cover,
+            note: pick(cat.note, cat.noteSq, lang)
+        }));
+
+        res.status(200).json({ categories: localized });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -19,6 +41,7 @@ export const getMenuData = async (req, res) => {
 // GET /api/menu/:slug - get products by category
 export const getProductsByCategory = async (req, res) => {
     try {
+        const lang = getLang(req);
         const slug = req.params.slug;
         const category = await categoryModel.findOne({ slug });
 
@@ -28,11 +51,10 @@ export const getProductsByCategory = async (req, res) => {
 
         const products = await productModel.find({ category: category._id });
 
-        // Loops through products, diplays the lists
         const items = products.map(product => ({
             id: product._id.toString(),
-            name: product.name,
-            description: product.description,
+            name: pick(product.name, product.nameSq, lang),
+            description: pick(product.description, product.descriptionSq, lang),
             price: product.price,
             image: product.image
         }));
@@ -41,11 +63,11 @@ export const getProductsByCategory = async (req, res) => {
             success: true,
             data: {
                 slug: category.slug,
-                name: category.name,
-                description: category.description,
+                name: pick(category.name, category.nameSq, lang),
+                description: pick(category.description, category.descriptionSq, lang),
                 icon: category.icon,
                 cover: category.cover,
-                note: category.note,
+                note: pick(category.note, category.noteSq, lang),
                 items
             }
         });
@@ -57,7 +79,7 @@ export const getProductsByCategory = async (req, res) => {
 // GET /api/menu/:slug/:productId - get single item by category and product ID
 export const getProductById = async (req, res) => {
     try {
-        //captures the values from the route parameters
+        const lang = getLang(req);
         const slug = req.params.slug;
         const productId = req.params.productId;
 
@@ -75,7 +97,6 @@ export const getProductById = async (req, res) => {
             return res.status(404).json({ error: 'Product not found' });
         }
 
-        
         const shareUrl = `${req.protocol}://${req.get('host')}/menu/${slug}/${product._id.toString()}`;
 
         res.json({
@@ -83,16 +104,16 @@ export const getProductById = async (req, res) => {
             data: {
                 category: {
                     slug: category.slug,
-                    name: category.name,
+                    name: pick(category.name, category.nameSq, lang),
                     icon: category.icon
                 },
                 item: {
                     id: product._id.toString(),
-                    name: product.name,
-                    description: product.description,
+                    name: pick(product.name, product.nameSq, lang),
+                    description: pick(product.description, product.descriptionSq, lang),
                     price: product.price,
                     image: product.image,
-                    details: product.details
+                    details: pick(product.details, product.detailsSq, lang)
                 },
                 shareUrl
             }

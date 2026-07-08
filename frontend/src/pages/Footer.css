@@ -63,3 +63,9 @@
   background: rgba(212, 175, 55, 0.08);
   transform: translateY(-1px);
 }
+
+.rg-footer-lang {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
