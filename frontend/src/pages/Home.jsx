@@ -1,31 +1,17 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
+import { useFetch } from "../hooks/useFetch";
 import "./Rubato.css";
 import "./Home.css";
 
 export function HomeView() {
   const { language, t } = useLanguage();
-  const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { data, error, loading } = useFetch(`/api/menu?lang=${language}`, {
+    errorMessage: "Failed to fetch categories",
+  });
+  const categories = data?.categories || [];
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
-    fetch(`/api/menu?lang=${language}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch categories");
-        return res.json();
-      })
-      .then((data) => setCategories(data.categories))
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
-  }, [language]);
 
   const handleImageError = (e) => {
     e.target.style.display = "none";

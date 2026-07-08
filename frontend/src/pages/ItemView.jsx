@@ -1,37 +1,20 @@
 import { Link, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
 import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
+import { useFetch } from "../hooks/useFetch";
 import "./Rubato.css";
 import "./Item.css";
 
 function useItemPage(slug, itemId, language) {
-  const [cat, setCat] = useState(null);
-  const [item, setItem] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { data, error, loading } = useFetch(
+    `/api/menu/${slug}/${itemId}?lang=${language}`,
+    { errorMessage: "Failed to fetch item" }
+  );
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true);
-    fetch(`/api/menu/${slug}/${itemId}?lang=${language}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch item");
-        return res.json();
-      })
-      .then((data) => {
-        setCat(data.data.category);
-        setItem(data.data.item);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
-  }, [slug, itemId, language]);
+  const cat = data?.data?.category || null;
+  const item = data?.data?.item || null;
 
-  const shareUrl = `/menu/${cat?.slug}/${item?.id}`;
-  return { cat, item, shareUrl, error, loading };
+  return { cat, item, error, loading };
 }
 
 export function ItemView() {
