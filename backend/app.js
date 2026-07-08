@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import compression from "compression";
 
 import authRoutes from "./routes/authRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
@@ -13,19 +14,23 @@ const app = express();
 
 // Security and middleware
 app.use(helmet());
+app.use(compression());
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit: '100kb'}));
 
 // General API rate limit
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 200,
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { message: "Too many requests, please try again later." }
-  })
-);
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many requests, please try again later." }
+});
+
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/menu')) return next(); // public menu is cached + unthrottled
+  return generalLimiter(req, res, next);
+});
 
 // Routes
 app.use("/api/auth", authRoutes);

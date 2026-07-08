@@ -1,10 +1,12 @@
 import categoryModel from "../models/categoryModel.js";
 import productModel from "../models/productModel.js";
+import cache from "../utils/cache.js";
 
 // Helper function to generate slug from name
 function generateSlug(name) {
     return name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
 }
+
 
 // Returns the Albanian value if lang is 'sq' and it's set, otherwise falls back to English
 function pick(base, sq, lang){
@@ -20,19 +22,24 @@ function getLang(req){
 export const getMenuData = async (req, res) => {
     try {
         const lang = getLang(req);
-        const categories = await categoryModel.find().sort({ name: 1 });
+        const cacheKey = `menu:${lang}`;
+        const cached = cache.get(cacheKey);
+        if (cached) return res.status(200).json(cached);
 
+        const categories = await categoryModel.find().sort({ name: 1 });
         const localized = categories.map(cat => ({
             _id: cat._id,
-            name: pick(cat.name, cat.nameSq, lang),
             slug: cat.slug,
+            name: pick(cat.name, cat.nameSq, lang),
             description: pick(cat.description, cat.descriptionSq, lang),
             icon: cat.icon,
             cover: cat.cover,
             note: pick(cat.note, cat.noteSq, lang)
         }));
+        const payload = { categories: localized };
 
-        res.status(200).json({ categories: localized });
+        cache.set(cacheKey, payload);
+        res.status(200).json(payload);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -41,8 +48,12 @@ export const getMenuData = async (req, res) => {
 // GET /api/menu/:slug - get products by category
 export const getProductsByCategory = async (req, res) => {
     try {
-        const lang = getLang(req);
         const slug = req.params.slug;
+        const lang = getLang(req);
+        const cacheKey = `menu:${slug}:${lang}`;
+        const cached = cache.get(cacheKey);
+        if (cached) return res.status(200).json(cached);
+
         const category = await categoryModel.findOne({ slug });
 
         if (!category) {
@@ -51,6 +62,7 @@ export const getProductsByCategory = async (req, res) => {
 
         const products = await productModel.find({ category: category._id });
 
+        // Loops through products, diplays the lists
         const items = products.map(product => ({
             id: product._id.toString(),
             name: pick(product.name, product.nameSq, lang),
@@ -59,7 +71,7 @@ export const getProductsByCategory = async (req, res) => {
             image: product.image
         }));
 
-        res.status(200).json({
+        const payload = {
             success: true,
             data: {
                 slug: category.slug,
@@ -70,7 +82,10 @@ export const getProductsByCategory = async (req, res) => {
                 note: pick(category.note, category.noteSq, lang),
                 items
             }
-        });
+        };
+
+        cache.set(cacheKey, payload);
+        res.status(200).json(payload);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

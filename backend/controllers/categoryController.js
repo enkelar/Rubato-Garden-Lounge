@@ -1,4 +1,5 @@
 import categoryModel from "../models/categoryModel.js";
+import cache from "../utils/cache.js";
 
 export const getCategories = async (req, res) => {
     try {
@@ -13,6 +14,7 @@ export const getCategories = async (req, res) => {
 export const createCategory = async (req, res) => {
     try {
         const category = await categoryModel.create(req.body);
+        cache.flushAll();
         res.status(201).json({ message: 'Category created successfully', category });
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -26,6 +28,7 @@ export const updateCategory = async (req, res) => {
             runValidators: true
         });
         if(!category) return res.status(404).json({ message: 'Category not found' });
+        cache.flushAll();
         res.status(200).json({ message: 'Category updated successfully', category });
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -36,6 +39,7 @@ export const deleteCategory = async (req, res) => {
     try {
         const category = await categoryModel.findByIdAndDelete(req.params.id);
         if(!category) return res.status(404).json({ message: 'Category not found' });
+        cache.flushAll();
         res.status(200).json({ message: 'Category deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });

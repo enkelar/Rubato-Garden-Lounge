@@ -10,7 +10,11 @@ export default async function connectDB(options = {}) {
   }
 
   try {
-    await mongoose.connect(connectionString, options.mongooseOptions);
+    await mongoose.connect(connectionString, {
+       maxPoolSize: 20,
+       serverSelectionTimeoutMS: 5000,
+      ...options.mongooseOptions
+    });
     console.log('Connected to MongoDB successfully');
     return mongoose.connection;
   } catch (error) {

@@ -47,6 +47,7 @@ export function HomeView() {
                   src={cat.cover}
                   alt={`${cat.name} category`}
                   className="rg-card-img"
+                  loading="lazy"
                   onError={handleImageError}
                 />
               )}
