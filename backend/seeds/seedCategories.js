@@ -4,11 +4,6 @@ import Category from '../models/categoryModel.js';
 
 dotenv.config();
 
-// Helper to generate slug from name
-function generateSlug(name) {
-    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
-}
-
 const categories = [
     { name: 'Soup', slug: 'soup', description: 'Warm and comforting soups', icon: '🍲', cover: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500', note: 'Perfect comfort food' },
     { name: 'Breakfast', slug: 'breakfast', description: 'Start your day right', icon: '🥞', cover: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=500', note: 'Morning favorites' },

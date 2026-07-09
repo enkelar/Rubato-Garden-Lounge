@@ -2,12 +2,6 @@ import categoryModel from "../models/categoryModel.js";
 import productModel from "../models/productModel.js";
 import cache from "../utils/cache.js";
 
-// Helper function to generate slug from name
-function generateSlug(name) {
-    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
-}
-
-
 // Returns the Albanian value if lang is 'sq' and it's set, otherwise falls back to English
 function pick(base, sq, lang){
     if(lang === 'sq' && sq) return sq;

@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { useAdminApi } from "../services/adminApi";
 import AdminProductForm from "../components/AdminProductForm";
+import AdminCategoryForm from "../components/AdminCategoryForm";
 import LanguageToggle from "../components/LanguageToggle";
 import "./Rubato.css";
 import "./adminDashboard.css";
@@ -22,6 +23,8 @@ export function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState("all");
   const [editing, setEditing] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [view, setView] = useState("products"); 
 
   useEffect(() => {
     const loadData = async () => {
@@ -63,11 +66,30 @@ export function AdminDashboard() {
     });
   }, [products, search, filterCat]);
 
+   async function reloadAll() {
+    const [catRes, prodRes] = await Promise.all([
+      api.getCategories(),
+      api.getProducts(),
+    ]);
+    setCategories(catRes.categories || []);
+    setProducts(prodRes.products || []);
+  }
+
   async function handleDelete(p) {
     if (!confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
     try {
       await api.deleteProduct(p._id);
       setProducts((prev) => prev.filter((x) => x._id !== p._id));
+    } catch (err) {
+      alert(err.message || "Delete failed");
+    }
+  }
+
+  async function handleDeleteCategory(c) {
+    if (!confirm(`Delete "${c.name}"? Products in it will keep their reference but the category will vanish from menus.`)) return;
+    try {
+      await api.deleteCategory(c._id);
+      setCategories((prev) => prev.filter((x) => x._id !== c._id));
     } catch (err) {
       alert(err.message || "Delete failed");
     }
@@ -106,15 +128,35 @@ export function AdminDashboard() {
             <button className="rg-btn rg-btn-ghost" onClick={handleSignOut}>
               {t("admin.signOut")}
             </button>
-            <button
-              className="rg-btn rg-btn-primary"
-              onClick={() => setEditing("new")}
-            >
-              {t("admin.newProduct")}
-            </button>
+            {view === "products" ? (
+              <button className="rg-btn rg-btn-primary" onClick={() => setEditing("new")}>
+                {t("admin.newProduct")}
+              </button>
+            ) : (
+              <button className="rg-btn rg-btn-primary" onClick={() => setEditingCategory("new")}>
+                {t("admin.newCategory")}
+              </button>
+            )}
           </div>
         </div>
 
+        <div className="rg-admin-tabs">
+          <button
+            className={`rg-chip-btn ${view === "products" ? "rg-chip-btn-active" : ""}`}
+            onClick={() => setView("products")}
+          >
+            {t("admin.products")}
+          </button>
+          <button
+            className={`rg-chip-btn ${view === "categories" ? "rg-chip-btn-active" : ""}`}
+            onClick={() => setView("categories")}
+          >
+            {t("admin.categories")}
+          </button>
+        </div>
+
+         {view === "products" && (
+          <>
         <div className="rg-admin-filters">
           <input
             className="rg-input"
@@ -141,7 +183,7 @@ export function AdminDashboard() {
 
         {!loading && (
           <div className="rg-admin-table-wrap">
-            <table className="rg-admin-table">
+            <table className="rg-admin-table rg-admin-table-products">
               <thead>
                 <tr>
                   <th>{t("admin.thProduct")}</th>
@@ -199,10 +241,53 @@ export function AdminDashboard() {
                   </tr>
                 )}
               </tbody>
+           </table>
+           </div>
+         )}
+          </>
+        )}
+
+        {view === "categories" && (
+          <div className="rg-admin-table-wrap">
+            <table className="rg-admin-table rg-admin-table-categories">
+              <thead>
+                <tr>
+                  <th>{t("admin.thCategoryName")}</th>
+                  <th>{t("admin.thSlug")}</th>
+                  <th />
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map((c) => (
+                  <tr key={c._id}>
+                    <td>
+                      <div className="rg-admin-product-cell">
+                        {c.cover ? (
+                          <img src={c.cover} alt="" className="rg-admin-thumb" />
+                        ) : (
+                          <div className="rg-admin-thumb rg-admin-thumb-empty" />
+                        )}
+                        <div className="rg-admin-product-name">
+                          {c.icon} {localizedName(c)}
+                        </div>                      </div>                    </td>                    <td className="rg-admin-cat-cell">{c.slug}</td>                    <td className="rg-right">                      <div className="rg-admin-row-actions">                        <button className="rg-chip-btn" onClick={() => setEditingCategory(c)}>                          {t("admin.edit")}                        </button>                        <button                          className="rg-chip-btn rg-chip-btn-danger"                          onClick={() => handleDeleteCategory(c)}                        >
+                          {t("admin.delete")}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {categories.length === 0 && (
+                  <tr>
+                    <td colSpan={3} className="rg-admin-empty">
+                      {t("admin.noCategories")}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
             </table>
           </div>
         )}
-      </main>
+       </main>
 
       {editing && (
         <div
@@ -231,14 +316,43 @@ export function AdminDashboard() {
               categories={categories}
               onDone={async () => {
                 setEditing(null);
-                const [catRes, prodRes] = await Promise.all([
-                  api.getCategories(),
-                  api.getProducts(),
-                ]);
-                setCategories(catRes.categories || []);
-                setProducts(prodRes.products || []);
+                await reloadAll();
               }}
               onCancel={() => setEditing(null)}
+            />
+          </div>
+        </div>
+      )}
+
+      {editingCategory && (
+        <div
+          className="rg-modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingCategory(null);
+          }}
+        >
+          <div className="rg-modal">
+            <div className="rg-modal-head">
+              <h2>
+                {editingCategory === "new"
+                  ? t("admin.newCategoryTitle")
+                  : `${t("admin.editCategoryTitle")} ${editingCategory.name}`}
+              </h2>
+              <button
+                className="rg-modal-close"
+                onClick={() => setEditingCategory(null)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            <AdminCategoryForm
+              initial={editingCategory === "new" ? null : editingCategory}
+              onDone={async () => {
+                setEditingCategory(null);
+                await reloadAll();
+              }}
+              onCancel={() => setEditingCategory(null)}
             />
           </div>
         </div>

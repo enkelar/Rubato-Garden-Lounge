@@ -54,6 +54,21 @@ export default {
   "admin.delete": "Delete",
   "admin.newProductTitle": "New product",
   "admin.editProductTitle": "Edit ·",
+  "admin.products": "Products",
+  "admin.categories": "Categories",
+  "admin.newCategory": "+ New category",
+  "admin.thCategoryName": "Category",
+  "admin.thSlug": "Slug",
+  "admin.noCategories": "No categories yet.",
+  "admin.newCategoryTitle": "New category",
+  "admin.editCategoryTitle": "Edit ·",
+
+  // Category Form
+  "categoryForm.icon": "Icon (emoji)",
+  "categoryForm.cover": "Cover image",
+  "categoryForm.note": "Note",
+  "categoryForm.createCategory": "Create category",
+  "categoryForm.requiredError": "Name and description are required.",
 
   // Product form
   "form.name": "Name",

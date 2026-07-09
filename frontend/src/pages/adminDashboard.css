@@ -250,13 +250,31 @@
   line-height: 1;
 }
 
+/* Tabs */
+.rg-admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.rg-chip-btn-active {
+  background: var(--rg-accent);
+  color: var(--rg-bg);
+  border-color: var(--rg-accent);
+}
+
 /* Mobile: table shows only Product + row actions */
 
 @media (max-width: 640px) {
-  .rg-admin-table th:nth-child(2),
-  .rg-admin-table td:nth-child(2),
-  .rg-admin-table th:nth-child(3),
-  .rg-admin-table td:nth-child(3) {
+  .rg-admin-table-products th:nth-child(2),
+  .rg-admin-table-products td:nth-child(2),
+  .rg-admin-table-products th:nth-child(3),
+  .rg-admin-table-products td:nth-child(3) {
+    display: none;
+  }
+
+  .rg-admin-table-categories th:nth-child(2),
+  .rg-admin-table-categories td:nth-child(2) {
     display: none;
   }
 

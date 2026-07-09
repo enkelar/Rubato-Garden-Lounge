@@ -30,6 +30,9 @@ export function useAdminApi() {
 
   return {
     getCategories: () => call("/categories"),
+    createCategory: (payload) => call("/categories", { method: "POST", body: JSON.stringify(payload)}),
+    updateCategory: (id, payload) => call(`/categories/${id}`, { method: "PUT", body: JSON.stringify(payload)}),
+    deleteCategory: (id) => call(`/categories/${id}`, { method: "DELETE" }),
     getProducts: () => call("/products"),
     createProduct: (payload) => call("/products", { method: "POST", body: JSON.stringify(payload) }),
     updateProduct: (id, payload) => call(`/products/${id}`, { method: "PUT", body: JSON.stringify(payload) }),

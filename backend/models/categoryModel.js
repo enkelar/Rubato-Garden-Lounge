@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { generateSlug} from '../utils/slug.js';
 
 const categorySchema = new mongoose.Schema({
     name: { type: String, required: true, index: true },

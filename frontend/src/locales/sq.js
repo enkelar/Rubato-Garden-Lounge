@@ -54,6 +54,21 @@ export default {
   "admin.delete": "Fshi",
   "admin.newProductTitle": "Produkt i ri",
   "admin.editProductTitle": "Ndrysho ·",
+  "admin.products": "Produktet",
+  "admin.categories": "Kategoritë",
+  "admin.newCategory": "+ Kategori e re",
+  "admin.thCategoryName": "Kategoria",
+  "admin.thSlug": "Slug",
+  "admin.noCategories": "Ende s'ka kategori.",
+  "admin.newCategoryTitle": "Kategori e re",
+  "admin.editCategoryTitle": "Ndrysho ·",
+
+  // Category form
+  "categoryForm.icon": "Ikonë (emoji)",
+  "categoryForm.cover": "Foto kapak",
+  "categoryForm.note": "Shënim",
+  "categoryForm.createCategory": "Krijo kategorinë",
+  "categoryForm.requiredError": "Emri dhe përshkrimi janë të detyrueshëm.",
 
   // Product form
   "form.name": "Emri",
