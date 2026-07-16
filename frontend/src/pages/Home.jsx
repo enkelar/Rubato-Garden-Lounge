@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
 import { useFetch } from "../hooks/useFetch";
+import SEO from "../components/SEO";
 import "./Rubato.css";
 import "./Home.css";
 
@@ -21,7 +22,19 @@ export function HomeView() {
 
   return (
     <div className="rg-app">
+      
       <header className="rg-hero">
+        <SEO
+        path="/"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Restaurant",
+          name: "Rubato Garden Lounge",
+          servesCuisine: "International",
+          url: "https://yourdomain.com",
+          image: "https://yourdomain.com/og-cover.jpg",
+        }}
+      />
         <div className="rg-eyebrow">{t("home.eyebrow")}</div>
         <h1 className="rg-title">Rubato</h1>
         <div className="rg-subtitle">{t("home.subtitle")}</div>

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import SEO from "../components/SEO";import { Link, useParams } from "react-router-dom";
 import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
 import { useFetch } from "../hooks/useFetch";
@@ -22,11 +22,20 @@ export function CategoryView() {
 
   return (
     <div className="rg-app">
+      {cat && (
+        <SEO
+          title={cat.name}
+          description={cat.description}
+          image={cat.cover}
+          path={`/menu/${cat.slug}`}
+        />
+      )}
+
       <div className="rg-sticky">
         <div className="rg-sticky-inner">
           <Link to="/" className="rg-back" aria-label="Back">
             ←
-          </Link> 
+          </Link>
           <div className="rg-sticky-title">
             {cat ? cat.icon : ""} {cat ? cat.name : ""}
           </div>

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import SEO from "../components/SEO";import { Link, useParams } from "react-router-dom";
 import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
 import { useFetch } from "../hooks/useFetch";
@@ -32,6 +32,16 @@ export function ItemView() {
   return (
     <div className="rg-app rg-detail">
       <main className="rg-detail-wrap">
+        {item && (
+          <SEO
+          title={item.name}
+          description={item.description}
+          image={item.image}
+          path={`/menu/${slug}/${itemId}`}
+          type="product"
+        />
+        )}
+
         <Link to={cat ? `/menu/${cat.slug}` : "/"} className="rg-detail-back">
           ← {t("item.backTo")} {cat?.name || t("item.menu")}
         </Link>
@@ -64,7 +74,7 @@ export function ItemView() {
             <div className="rg-item-card-body">
               {cat && (
                 <div className="rg-item-card-eyebrow">
-                 {cat.name}
+                  {cat.name}
                 </div>
               )}
 

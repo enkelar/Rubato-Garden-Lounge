@@ -9,6 +9,7 @@ import menuRoutes from "./routes/menuRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import sitemapRoutes from "./routes/sitemapRoutes.js";
 
 const app = express();
 
@@ -29,7 +30,7 @@ const generalLimiter = rateLimit({
 
 // Apply rate limiter to all routes except /api/menu
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api/menu')) return next(); // public menu is cached + unthrottled
+  if (req.path.startsWith('/api/menu') || req.path.startsWith('/sitemap.xml')) return next();
   return generalLimiter(req, res, next);
 });
 
@@ -39,6 +40,7 @@ app.use("/api/menu", menuRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/uploads", uploadRoutes)
+app.use("/sitemap.xml", sitemapRoutes); 
 
 // Health check
 app.get("/", (req, res) => {
