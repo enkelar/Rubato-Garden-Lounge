@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
-import { generateSlug} from '../utils/slug.js';
+import { generateSlug } from '../utils/slug.js';
 
 const categorySchema = new mongoose.Schema({
-    name: { type: String, required: true, index: true },
-    nameSq: { type: String },
-    slug: { type: String, required: true, unique: true, lowercase: true },
-    icon: { type: String, default: '🍽️' },
-    cover: { type: String, default: 'https://via.placeholder.com/400?text=Category' },
-    note: { type: String },
-    noteSq: { type: String }
+  name: { type: String, required: true, index: true },
+  nameSq: { type: String },
+  slug: { type: String, required: true, unique: true, lowercase: true },
+  icon: { type: String, default: '🍽️' },
+  cover: { type: String, default: 'https://via.placeholder.com/400?text=Category' },
+  note: { type: String },
+  noteSq: { type: String }
 });
 
 // Generates slug before saving the category

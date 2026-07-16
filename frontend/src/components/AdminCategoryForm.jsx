@@ -14,7 +14,7 @@ const EMPTY = {
 };
 
 export function AdminCategoryForm({ initial, onDone, onCancel }) {
-  const api = useAdminApi(); 
+  const api = useAdminApi();
   const { t } = useLanguage(); // translation function
   // Initialize form state from initial (edit) or empty (create)
   const [form, setForm] = useState(() =>
@@ -27,7 +27,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
           note: initial.note || "",
           noteSq: initial.noteSq || "",
         }
-      : { ...EMPTY }
+      : { ...EMPTY },
   );
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false); // save-in-progress state
@@ -46,7 +46,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
     setError(null);
     setUploading(true); // show uploading state
     try {
-      // get presigned URL from API 
+      // get presigned URL from API
       const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type);
 
       // upload file directly to storage
@@ -98,11 +98,18 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
         {/* Name - English */}
         <label className="rg-field">
           <span className="rg-field-form-label">{t("form.name")}</span>
-          <input className="rg-input" required value={form.name} onChange={(e) => set("name", e.target.value)} />
+          <input
+            className="rg-input"
+            required
+            value={form.name}
+            onChange={(e) => set("name", e.target.value)}
+          />
         </label>
-         {/* Name - Albanian */}
+        {/* Name - Albanian */}
         <label className="rg-field">
-          <span className="rg-field-form-label rg-field-label-sq">{t("form.name")} (SQ)</span>
+          <span className="rg-field-form-label rg-field-label-sq">
+            {t("form.name")} (SQ)
+          </span>
           <input
             className="rg-input rg-input-sq"
             placeholder="Emri në shqip (opsionale)"
@@ -110,7 +117,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
             onChange={(e) => set("nameSq", e.target.value)}
           />
         </label>
-         {/* Icon */}
+        {/* Icon */}
         <label className="rg-field">
           <span className="rg-field-form-label">{t("categoryForm.icon")}</span>
           <input
@@ -142,11 +149,17 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
       {/* Note - English */}
       <label className="rg-field">
         <span className="rg-field-form-label">{t("categoryForm.note")}</span>
-        <input className="rg-input" value={form.note} onChange={(e) => set("note", e.target.value)} />
+        <input
+          className="rg-input"
+          value={form.note}
+          onChange={(e) => set("note", e.target.value)}
+        />
       </label>
       {/* Note (Albanian) */}
       <label className="rg-field">
-        <span className="rg-field-form-label rg-field-label-sq">{t("categoryForm.note")} (SQ)</span>
+        <span className="rg-field-form-label rg-field-label-sq">
+          {t("categoryForm.note")} (SQ)
+        </span>
         <input
           className="rg-input rg-input-sq"
           value={form.noteSq}
@@ -157,9 +170,23 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
       {error && <p className="rg-auth-error">{error}</p>}
 
       <div className="rg-form-actions">
-        <button type="button" className="rg-btn rg-btn-ghost" onClick={onCancel}>{t("form.cancel")}</button>
-        <button type="submit" className="rg-btn rg-btn-primary" disabled={busy || uploading}>
-          {busy ? t("form.saving") : initial ? t("form.saveChanges") : t("categoryForm.createCategory")}
+        <button
+          type="button"
+          className="rg-btn rg-btn-ghost"
+          onClick={onCancel}
+        >
+          {t("form.cancel")}
+        </button>
+        <button
+          type="submit"
+          className="rg-btn rg-btn-primary"
+          disabled={busy || uploading}
+        >
+          {busy
+            ? t("form.saving")
+            : initial
+              ? t("form.saveChanges")
+              : t("categoryForm.createCategory")}
         </button>
       </div>
     </form>

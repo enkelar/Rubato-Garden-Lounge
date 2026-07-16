@@ -3,13 +3,13 @@ import productModel from "../models/productModel.js";
 import cache from "../utils/cache.js";
 
 // Returns the Albanian value if lang is 'sq' and it's set, otherwise falls back to English
-function pick(base, sq, lang){
-    if(lang === 'sq' && sq) return sq;
+function pick(base, sq, lang) {
+    if (lang === 'sq' && sq) return sq;
     return base;
 }
 
 // Reads language from query string and returns 'sq' or 'en
-function getLang(req){
+function getLang(req) {
     return req.query.lang === 'sq' ? 'sq' : 'en';
 }
 
@@ -58,7 +58,7 @@ export const getProductsByCategory = async (req, res) => {
         if (!category) {
             return res.status(404).json({ error: 'Category not found' });
         }
-        
+
         // Find all products that belong to category
         const products = await productModel.find({ category: category._id });
 
