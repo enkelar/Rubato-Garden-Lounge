@@ -31,6 +31,7 @@
   overflow: hidden;
   box-shadow: var(--rg-shadow);
   border: 1px solid rgba(212, 175, 55, 0.25);
+  animation: rg-card-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .rg-item-card-media {
