@@ -12,12 +12,19 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import sitemapRoutes from "./routes/sitemapRoutes.js";
 
 const app = express();
+app.set('trust proxy', 1);
 
 // Security and middleware
 app.use(helmet()); // HTTP headers security
 app.use(compression()); // compresses responses (gzip), reduce bandwidth, speedup
-app.use(cors());
 app.use(express.json({limit: '100kb'})); // clients can't send huge JSON payloads
+
+const allowedOrigins = (process.env.FRONTEND_URL || "").split(",").map(s => s.trim()).filter(Boolean);
+
+app.use(cors({
+  origin: allowedOrigins.length ? allowedOrigins : false,
+  credentials: true,
+}));
 
 // General API rate limit
 const generalLimiter = rateLimit({

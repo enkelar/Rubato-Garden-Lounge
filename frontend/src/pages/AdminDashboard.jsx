@@ -417,7 +417,7 @@ export function AdminDashboard() {
           deleteTarget
             ? deleteTarget.kind === "product"
               ? `Delete "${localizedName(deleteTarget.item)}"? This cannot be undone.`
-              : `Delete "${localizedName(deleteTarget.item)}"? Products in it will keep their reference but the category will vanish from menus.`
+              : `Delete "${localizedName(deleteTarget.item)}"? This will fail if any products still belong to this category.`
             : ""
         }
         confirmLabel={t("admin.delete")}

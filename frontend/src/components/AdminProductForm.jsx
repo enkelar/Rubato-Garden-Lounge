@@ -51,7 +51,7 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
     setError(null);
     setUploading(true);
     try {
-      const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type);
+      const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type, file.size);
 
       const putRes = await fetch(uploadURL, {
         method: "PUT",

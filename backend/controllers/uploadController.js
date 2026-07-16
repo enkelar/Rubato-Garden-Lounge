@@ -11,6 +11,8 @@ const ALLOWED_TYPES = {
     'image/webp': 'webp',
 };
 
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+
 // Generate a signed URL for uploading an image
 export const getImageUploadUrl = async (req, res) => {
     try{
@@ -19,7 +21,13 @@ export const getImageUploadUrl = async (req, res) => {
             return res.status(500).json({ error: 'R2 is not configured on the server.' });
         }
 
-        const { contentType } = req.body;
+        const { contentType, fileSize } = req.body;
+
+        if (typeof fileSize !== 'number' || fileSize <= 0 || fileSize > MAX_FILE_SIZE_BYTES) {
+            return res.status(400).json({
+               message: `File size must be between 1 byte and ${MAX_FILE_SIZE_BYTES / (1024 * 1024)}MB.`
+        });
+}
         const extension = ALLOWED_TYPES[contentType]; // convert content type to a file extension
 
         // reject unsupported image formats

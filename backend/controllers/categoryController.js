@@ -1,4 +1,5 @@
 import categoryModel from "../models/categoryModel.js";
+import productModel from "../models/productModel.js"; // add this import at top
 import cache from "../utils/cache.js";
 import { generateSlug } from "../utils/slug.js"; // ← adjust path if different
 
@@ -80,7 +81,16 @@ export const updateCategory = async (req, res) => {
 // Delete a category by ID
 export const deleteCategory = async (req, res) => {
   try {
-    const category = await categoryModel.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+
+    const productCount = await productModel.countDocuments({ category: id });
+    if (productCount > 0) {
+      return res.status(409).json({
+        message: `Cannot delete category — ${productCount} product(s) still reference it. Reassign or delete those products first.`,
+      });
+    }
+
+    const category = await categoryModel.findByIdAndDelete(id);
     if (!category) return res.status(404).json({ message: "Category not found" });
     cache.flushAll();
     res.status(200).json({ message: "Category deleted successfully" });

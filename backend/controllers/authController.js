@@ -20,8 +20,9 @@ export const adminLogin = async (req, res) => {
 
         // Compare password to the hashed psw in the database
         const validPassword = await admin.comparePassword(req.body.password);
+        if (!validPassword) return res.status(400).json({ message: 'Invalid email or password' });
 
-        // Generate authentication roken for the logged-in adminc
+        // Generate authentication token for the logged-in admin
         const token = admin.generateAuthToken();
 
         res.status(200).json({

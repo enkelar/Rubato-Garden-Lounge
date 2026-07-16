@@ -47,7 +47,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
     setUploading(true); // show uploading state
     try {
       // get presigned URL from API
-      const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type);
+      const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type, file.size);
 
       // upload file directly to storage
       const putRes = await fetch(uploadURL, {

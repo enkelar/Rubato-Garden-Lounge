@@ -28,7 +28,7 @@ adminSchema.methods.generateAuthToken = function() {
     return jwt.sign(
         { _id: this._id, name: this.name, email: this.email, isAdmin: true },
         process.env.JWTPRIVATEKEY,
-        { expiresIn: '24h' }
+        { expiresIn: '4h' }
     );
 };
 

@@ -34,8 +34,7 @@ async function seedAdmin() {
         console.log(' Admin created successfully:');
         console.log(`   Name: ${admin.name}`);
         console.log(`   Email: ${admin.email}`);
-        console.log(`   Password: ${adminPassword}`);
-        console.log('\n  Save these credentials and delete this log!');
+        console.log('   Password: (set via ADMIN_PASSWORD env var — not logged)');
 
         process.exit(0);
     } catch (error) {
