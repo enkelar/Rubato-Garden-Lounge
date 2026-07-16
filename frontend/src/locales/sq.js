@@ -19,7 +19,6 @@ export default {
   "item.details": "Detaje",
   "item.backTo": "Kthehu te",
   "item.menu": "Menyja",
-  "item.share": "Shpërndaje",
 
   // Footer
   "footer.tagline": "Rubato Garden Lounge · Krijuar me kujdes",
@@ -62,6 +61,8 @@ export default {
   "admin.noCategories": "Ende s'ka kategori.",
   "admin.newCategoryTitle": "Kategori e re",
   "admin.editCategoryTitle": "Ndrysho ·",
+  "admin.searchCategoriesPlaceholder": "Kërko sipas emrit…",
+  "admin.noCategoryMatch": "Asnjë kategori nuk përputhet me kërkimin.",
 
   // Category form
   "categoryForm.icon": "Ikonë (emoji)",
@@ -74,7 +75,7 @@ export default {
   "form.name": "Emri",
   "form.category": "Kategoria",
   "form.selectCategory": "Zgjidh një kategori",
-  "form.price": "Çmimi ($)",
+  "form.price": "Çmimi (€)",
   "form.photo": "Foto",
   "form.description": "Përshkrimi",
   "form.details": "Detaje",

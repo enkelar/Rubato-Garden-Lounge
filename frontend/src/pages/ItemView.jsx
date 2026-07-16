@@ -31,69 +31,63 @@ export function ItemView() {
 
   return (
     <div className="rg-app rg-detail">
-      <Link
-          to={cat ? `/menu/${cat.slug}` : "/"}
-          className="rg-close"
-          aria-label="Close"
-        >
-          ×
+      <main className="rg-detail-wrap">
+        <Link to={cat ? `/menu/${cat.slug}` : "/"} className="rg-detail-back">
+          ← {t("item.backTo")} {cat?.name || t("item.menu")}
         </Link>
-      <div className="rg-detail-hero">
+
         {loading && <div className="rg-loading">{t("item.loading")}</div>}
-        {!loading && item && item.image && (
-          <img
-            src={item.image}
-            alt={`${item.name} - ${item.description}`}
-            onError={handleImageError}
-          />
-        )}
-        {!loading && item && !item.image && (
-          <div className="rg-detail-img-placeholder">{item.name}</div>
-        )}
-        {!loading && item && item.image && (
-          <div
-            className="rg-detail-img-placeholder"
-            style={{ display: "none" }}
-          >
-            {item.name}
-          </div>
-        )}
+        {error && <div className="rg-error">{t("item.error")} {error}</div>}
         {!loading && !item && !error && (
           <div className="rg-loading">{t("item.notFound")}</div>
         )}
-      </div>
 
-      <main className="rg-container">
-        {error && (
-          <div className="rg-error">{t("item.error")} {error}</div>
+        {!loading && item && (
+          <div className="rg-item-card">
+            <div className="rg-item-card-media">
+              {item.image ? (
+                <>
+                  <img
+                    src={item.image}
+                    alt={`${item.name} - ${item.description}`}
+                    onError={handleImageError}
+                  />
+                  <div className="rg-item-card-media-fallback" style={{ display: "none" }}>
+                    {item.name}
+                  </div>
+                </>
+              ) : (
+                <div className="rg-item-card-media-fallback">{item.name}</div>
+              )}
+            </div>
+
+            <div className="rg-item-card-body">
+              {cat && (
+                <div className="rg-item-card-eyebrow">
+                 {cat.name}
+                </div>
+              )}
+
+              <div className="rg-item-card-headline">
+                <h1 className="rg-item-card-name">{item.name}</h1>
+                <div className="rg-item-card-price">€{Number(item.price).toFixed(2)}</div>
+              </div>
+
+              <p className="rg-item-card-desc">{item.description}</p>
+
+              {item.details && (
+                <>
+                  <div className="rg-item-card-divider" />
+                  <div className="rg-item-card-meta">
+                    <div className="rg-item-card-meta-label">{t("item.details")}</div>
+                    <p className="rg-item-card-meta-text">{item.details}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
         )}
 
-        <div className="rg-detail-body">
-          <h1 className="rg-detail-name">{item?.name || ""}</h1>
-          <div className="rg-detail-price">{item?.price || ""}</div>
-
-          <div className="rg-section">
-            <div className="rg-section-label">{t("item.contains")}</div>
-            <p>{item?.description || ""}</p>
-          </div>
-
-          {item?.details && (
-            <div className="rg-section">
-              <div className="rg-section-label">{t("item.details")}</div>
-              <p>{item.details}</p>
-            </div>
-          )}
-
-          <div className="rg-actions">
-            <Link
-              to={cat ? `/menu/${cat.slug}` : "/"}
-              className="rg-btn rg-btn-ghost"
-            >
-              {t("item.backTo")} {cat?.name || t("item.menu")}
-            </Link>
-           
-          </div>
-        </div>
         <Footer />
       </main>
     </div>

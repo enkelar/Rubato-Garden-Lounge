@@ -19,7 +19,6 @@ export default {
   "item.details": "Details",
   "item.backTo": "Back to",
   "item.menu": "Menu",
-  "item.share": "Share",
 
   // Footer
   "footer.tagline": "Rubato Garden Lounge · Crafted with care",
@@ -62,6 +61,8 @@ export default {
   "admin.noCategories": "No categories yet.",
   "admin.newCategoryTitle": "New category",
   "admin.editCategoryTitle": "Edit ·",
+  "admin.searchCategoriesPlaceholder": "Search by name…",
+  "admin.noCategoryMatch": "No categories match your search.",
 
   // Category Form
   "categoryForm.icon": "Icon (emoji)",
@@ -74,7 +75,7 @@ export default {
   "form.name": "Name",
   "form.category": "Category",
   "form.selectCategory": "Select a category",
-  "form.price": "Price ($)",
+  "form.price": "Price (€)",
   "form.photo": "Photo",
   "form.description": "Description",
   "form.details": "Details",
@@ -84,3 +85,4 @@ export default {
   "form.createProduct": "Create product",
   "form.requiredError": "Name, category, and price are required.",
 };
+

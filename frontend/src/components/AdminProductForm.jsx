@@ -3,6 +3,7 @@ import { useAdminApi } from "../services/adminApi";
 import { useLanguage } from "../context/LanguageContext";
 import "./adminProductForm.css";
 
+// Default empty form values
 const EMPTY = {
   name: "",
   nameSq: "",
@@ -15,9 +16,11 @@ const EMPTY = {
   detailsSq: "",
 };
 
+// Product form component for admin (create/edit)
 export function AdminProductForm({ initial, categories, onDone, onCancel }) {
   const api = useAdminApi();
-  const { t } = useLanguage();
+  const { t } = useLanguage(); // translation method
+  // Initialize form state from initial (edit) or empty/default (create)
   const [form, setForm] = useState(() =>
     initial
       ? {
@@ -31,7 +34,7 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
           details: initial.details || "",
           detailsSq: initial.detailsSq || "",
         }
-      : { ...EMPTY, category: categories[0]?._id || "" }
+      : { ...EMPTY, category: categories[0]?._id || "" } // default to first category
   );
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -71,11 +74,13 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
     e.preventDefault();
     setError(null);
 
+    // Validate required fields
     if (!form.name || !form.category || !form.price) {
       setError(t("form.requiredError"));
       return;
     }
 
+    // Build payload, make sure price is a number
     const payload = { ...form, price: Number(form.price) };
 
     setBusy(true);
@@ -85,7 +90,7 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
       } else {
         await api.createProduct(payload);
       }
-      onDone();
+      onDone(); // Notify parent to refresh/close
     } catch (err) {
       setError(err.message || "Save failed");
     } finally {
@@ -96,11 +101,12 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
   return (
     <form className="rg-form" onSubmit={handleSubmit}>
       <div className="rg-form-grid">
+        {/* Name - English */}
         <label className="rg-field">
           <span className="rg-field-form-label">{t("form.name")}</span>
           <input className="rg-input" required value={form.name} onChange={(e) => set("name", e.target.value)} />
         </label>
-
+        {/* Name - Albanian */}
         <label className="rg-field">
         <span className="rg-field-form-label rg-field-label-sq">{t("form.name")} (SQ)</span>
         <input
@@ -109,8 +115,8 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
           value={form.nameSq}
           onChange={(e) => set("nameSq", e.target.value)}
         />
-      </label>
-
+        </label>
+        {/* Category dropdown */}
         <label className="rg-field">
           <span className="rg-field-form-label">{t("form.category")}</span>
           <select className="rg-input" required value={form.category} onChange={(e) => set("category", e.target.value)}>
@@ -120,7 +126,7 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
             ))}
           </select>
         </label>
-
+        {/* Price input */}
         <label className="rg-field">
           <span className="rg-field-form-label">{t("form.price")}</span>
           <input className="rg-input" type="number" step="0.01" min="0" required value={form.price} onChange={(e) => set("price", e.target.value)} />

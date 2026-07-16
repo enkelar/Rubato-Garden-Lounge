@@ -25,9 +25,10 @@
 }
 
 .rg-admin-nav-links {
-  display: flex;
+   display: flex;
   gap: 20px;
   font-size: 14px;
+  align-items: center;
 }
 
 .rg-admin-nav-links a {

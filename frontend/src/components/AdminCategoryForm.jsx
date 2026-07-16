@@ -3,6 +3,7 @@ import { useAdminApi } from "../services/adminApi";
 import { useLanguage } from "../context/LanguageContext";
 import "./adminProductForm.css";
 
+// Default empty form values
 const EMPTY = {
   name: "",
   nameSq: "",
@@ -15,8 +16,9 @@ const EMPTY = {
 };
 
 export function AdminCategoryForm({ initial, onDone, onCancel }) {
-  const api = useAdminApi();
-  const { t } = useLanguage();
+  const api = useAdminApi(); 
+  const { t } = useLanguage(); // translation function
+  // Initialize form state from initial (edit) or empty (create)
   const [form, setForm] = useState(() =>
     initial
       ? {
@@ -32,22 +34,26 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
       : { ...EMPTY }
   );
   const [error, setError] = useState(null);
-  const [busy, setBusy] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [busy, setBusy] = useState(false); // save-in-progress state
+  const [uploading, setUploading] = useState(false); // image upload state
 
+  // helper to update a single field in form
   function set(key, value) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  // handle image file upload to R2 via presigned URL
   async function handleFileChange(e) {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]; // get selected file
     if (!file) return;
 
     setError(null);
-    setUploading(true);
+    setUploading(true); // show uploading state
     try {
+      // get presigned URL from API 
       const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type);
 
+      // upload file directly to storage
       const putRes = await fetch(uploadURL, {
         method: "PUT",
         headers: { "Content-Type": file.type },
@@ -56,15 +62,16 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
 
       if (!putRes.ok) throw new Error("Image upload to storage failed.");
 
-      set("cover", publicUrl);
+      set("cover", publicUrl); // set public url in form
     } catch (err) {
       setError(err.message || "Image upload failed");
     } finally {
       setUploading(false);
-      e.target.value = "";
+      e.target.value = ""; // reset file input
     }
   }
 
+  // handle form submit ( create or update category )
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
@@ -74,7 +81,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
       return;
     }
 
-    setBusy(true);
+    setBusy(true); // show saving state
     try {
       if (initial) {
         await api.updateCategory(initial._id, form);
@@ -92,11 +99,12 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
   return (
     <form className="rg-form" onSubmit={handleSubmit}>
       <div className="rg-form-grid">
+        {/* Name - English */}
         <label className="rg-field">
           <span className="rg-field-form-label">{t("form.name")}</span>
           <input className="rg-input" required value={form.name} onChange={(e) => set("name", e.target.value)} />
         </label>
-
+         {/* Name - Albanian */}
         <label className="rg-field">
           <span className="rg-field-form-label rg-field-label-sq">{t("form.name")} (SQ)</span>
           <input
@@ -106,7 +114,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
             onChange={(e) => set("nameSq", e.target.value)}
           />
         </label>
-
+         {/* Icon */}
         <label className="rg-field">
           <span className="rg-field-form-label">{t("categoryForm.icon")}</span>
           <input
@@ -116,7 +124,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
             onChange={(e) => set("icon", e.target.value)}
           />
         </label>
-
+        {/* Cover image upload */}
         <label className="rg-field">
           <span className="rg-field-form-label">{t("categoryForm.cover")}</span>
           <input
@@ -129,18 +137,23 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
           {uploading && <span className="rg-upload-status">Uploading…</span>}
         </label>
       </div>
-
+      {/* Cover image preview */}
       {form.cover && (
         <div className="rg-image-preview">
           <img src={form.cover} alt="Preview" />
         </div>
       )}
-
+      {/* Description - English */}
       <label className="rg-field">
         <span className="rg-field-form-label">{t("form.description")}</span>
-        <textarea className="rg-input rg-textarea" rows={2} required value={form.description} onChange={(e) => set("description", e.target.value)} />
+        <textarea 
+           className="rg-input rg-textarea" 
+           rows={2} 
+           required value={form.description} 
+           onChange={(e) => set("description", 
+           e.target.value)} />
       </label>
-
+      {/* Description - Albanian */}
       <label className="rg-field">
         <span className="rg-field-form-label rg-field-label-sq">{t("form.description")} (SQ)</span>
         <textarea
@@ -151,12 +164,12 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
           onChange={(e) => set("descriptionSq", e.target.value)}
         />
       </label>
-
+      {/* Note - English */}
       <label className="rg-field">
         <span className="rg-field-form-label">{t("categoryForm.note")}</span>
         <input className="rg-input" value={form.note} onChange={(e) => set("note", e.target.value)} />
       </label>
-
+      {/* Note (Albanian) */}
       <label className="rg-field">
         <span className="rg-field-form-label rg-field-label-sq">{t("categoryForm.note")} (SQ)</span>
         <input
@@ -165,7 +178,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
           onChange={(e) => set("noteSq", e.target.value)}
         />
       </label>
-
+      {/* Error message */}
       {error && <p className="rg-auth-error">{error}</p>}
 
       <div className="rg-form-actions">

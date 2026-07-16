@@ -6,6 +6,7 @@ import { useAdminApi } from "../services/adminApi";
 import AdminProductForm from "../components/AdminProductForm";
 import AdminCategoryForm from "../components/AdminCategoryForm";
 import LanguageToggle from "../components/LanguageToggle";
+import ConfirmModal from "../components/ConfirmModal";
 import "./Rubato.css";
 import "./adminDashboard.css";
 
@@ -21,10 +22,17 @@ export function AdminDashboard() {
   const [error, setError] = useState(null);
 
   const [search, setSearch] = useState("");
+  const [categorySearch, setCategorySearch] = useState("");
   const [filterCat, setFilterCat] = useState("all");
   const [editing, setEditing] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [view, setView] = useState("products"); 
+  const [view, setView] = useState("products");
+
+  // Unified delete-confirmation state — works for both products and categories.
+  // deleteTarget.kind tells us which API call / which list to update.
+  const [deleteTarget, setDeleteTarget] = useState(null); // { kind: "product" | "category", item }
+  const [deleteError, setDeleteError] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -66,7 +74,16 @@ export function AdminDashboard() {
     });
   }, [products, search, filterCat]);
 
-   async function reloadAll() {
+  const filteredCategories = useMemo(() => {
+  return categories.filter((c) => {
+    const name = language === "sq" && c?.nameSq ? c.nameSq : c?.name;
+    if (categorySearch && !name?.toLowerCase().includes(categorySearch.toLowerCase()))
+      return false;
+    return true;
+  });
+}, [categories, categorySearch, language]);
+
+  async function reloadAll() {
     const [catRes, prodRes] = await Promise.all([
       api.getCategories(),
       api.getProducts(),
@@ -75,23 +92,35 @@ export function AdminDashboard() {
     setProducts(prodRes.products || []);
   }
 
-  async function handleDelete(p) {
-    if (!confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
-    try {
-      await api.deleteProduct(p._id);
-      setProducts((prev) => prev.filter((x) => x._id !== p._id));
-    } catch (err) {
-      alert(err.message || "Delete failed");
-    }
+  function handleDelete(p) {
+    setDeleteError(null);
+    setDeleteTarget({ kind: "product", item: p });
   }
 
-  async function handleDeleteCategory(c) {
-    if (!confirm(`Delete "${c.name}"? Products in it will keep their reference but the category will vanish from menus.`)) return;
+  function handleDeleteCategory(c) {
+    setDeleteError(null);
+    setDeleteTarget({ kind: "category", item: c });
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    const { kind, item } = deleteTarget;
+
+    setDeleting(true);
+    setDeleteError(null);
     try {
-      await api.deleteCategory(c._id);
-      setCategories((prev) => prev.filter((x) => x._id !== c._id));
+      if (kind === "product") {
+        await api.deleteProduct(item._id);
+        setProducts((prev) => prev.filter((x) => x._id !== item._id));
+      } else {
+        await api.deleteCategory(item._id);
+        setCategories((prev) => prev.filter((x) => x._id !== item._id));
+      }
+      setDeleteTarget(null);
     } catch (err) {
-      alert(err.message || "Delete failed");
+      setDeleteError(err.message || "Delete failed");
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -155,139 +184,162 @@ export function AdminDashboard() {
           </button>
         </div>
 
-         {view === "products" && (
+        {view === "products" && (
           <>
-        <div className="rg-admin-filters">
-          <input
-            className="rg-input"
-            placeholder={t("admin.searchPlaceholder")}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <select
-            className="rg-input"
-            value={filterCat}
-            onChange={(e) => setFilterCat(e.target.value)}
-          >
-            <option value="all">{t("admin.allCategories")}</option>
-            {categories.map((c) => (
-              <option key={c._id} value={c._id}>
-                {localizedName(c)}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {error && <div className="rg-error">{error}</div>}
-        {loading && <div className="rg-loading">{t("admin.loadingProducts")}</div>}
-
-        {!loading && (
-          <div className="rg-admin-table-wrap">
-            <table className="rg-admin-table rg-admin-table-products">
-              <thead>
-                <tr>
-                  <th>{t("admin.thProduct")}</th>
-                  <th>{t("admin.thCategory")}</th>
-                  <th className="rg-right">{t("admin.thPrice")}</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((p) => (
-                  <tr key={p._id}>
-                    <td>
-                      <div className="rg-admin-product-cell">
-                        {p.image ? (
-                          <img
-                            src={p.image}
-                            alt=""
-                            className="rg-admin-thumb"
-                          />
-                        ) : (
-                          <div className="rg-admin-thumb rg-admin-thumb-empty" />
-                        )}
-                        <div className="rg-admin-product-name">{localizedName(p)}</div>
-                      </div>
-                    </td>
-                    <td className="rg-admin-cat-cell">
-                      {categoryName(p.category)}
-                    </td>
-                    <td className="rg-right rg-admin-price">
-                      ${Number(p.price).toFixed(2)}
-                    </td>
-                    <td className="rg-right">
-                      <div className="rg-admin-row-actions">
-                        <button
-                          className="rg-chip-btn"
-                          onClick={() => setEditing(p)}
-                        >
-                          {t("admin.edit")}
-                        </button>
-                        <button
-                          className="rg-chip-btn rg-chip-btn-danger"
-                          onClick={() => handleDelete(p)}
-                        >
-                          {t("admin.delete")}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+            <div className="rg-admin-filters">
+              <input
+                className="rg-input"
+                placeholder={t("admin.searchPlaceholder")}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <select
+                className="rg-input"
+                value={filterCat}
+                onChange={(e) => setFilterCat(e.target.value)}
+              >
+                <option value="all">{t("admin.allCategories")}</option>
+                {categories.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {localizedName(c)}
+                  </option>
                 ))}
-                {filtered.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className="rg-admin-empty">
-                      {t("admin.noMatch")}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-           </table>
-           </div>
-         )}
+              </select>
+            </div>
+
+            {error && <div className="rg-error">{error}</div>}
+            {loading && <div className="rg-loading">{t("admin.loadingProducts")}</div>}
+
+            {!loading && (
+              <div className="rg-admin-table-wrap">
+                <table className="rg-admin-table rg-admin-table-products">
+                  <thead>
+                    <tr>
+                      <th>{t("admin.thProduct")}</th>
+                      <th>{t("admin.thCategory")}</th>
+                      <th className="rg-right">{t("admin.thPrice")}</th>
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((p) => (
+                      <tr key={p._id}>
+                        <td>
+                          <div className="rg-admin-product-cell">
+                            {p.image ? (
+                              <img
+                                src={p.image}
+                                alt=""
+                                className="rg-admin-thumb"
+                              />
+                            ) : (
+                              <div className="rg-admin-thumb rg-admin-thumb-empty" />
+                            )}
+                            <div className="rg-admin-product-name">{localizedName(p)}</div>
+                          </div>
+                        </td>
+                        <td className="rg-admin-cat-cell">
+                          {categoryName(p.category)}
+                        </td>
+                        <td className="rg-right rg-admin-price">
+                          €{Number(p.price).toFixed(2)}
+                        </td>
+                        <td className="rg-right">
+                          <div className="rg-admin-row-actions">
+                            <button
+                              className="rg-chip-btn"
+                              onClick={() => setEditing(p)}
+                            >
+                              {t("admin.edit")}
+                            </button>
+                            <button
+                              className="rg-chip-btn rg-chip-btn-danger"
+                              onClick={() => handleDelete(p)}
+                            >
+                              {t("admin.delete")}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {filtered.length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="rg-admin-empty">
+                          {t("admin.noMatch")}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </>
         )}
 
         {view === "categories" && (
-          <div className="rg-admin-table-wrap">
-            <table className="rg-admin-table rg-admin-table-categories">
-              <thead>
-                <tr>
-                  <th>{t("admin.thCategoryName")}</th>
-                  <th>{t("admin.thSlug")}</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {categories.map((c) => (
-                  <tr key={c._id}>
-                    <td>
-                      <div className="rg-admin-product-cell">
-                        {c.cover ? (
-                          <img src={c.cover} alt="" className="rg-admin-thumb" />
-                        ) : (
-                          <div className="rg-admin-thumb rg-admin-thumb-empty" />
-                        )}
-                        <div className="rg-admin-product-name">
-                          {c.icon} {localizedName(c)}
-                        </div>                      </div>                    </td>                    <td className="rg-admin-cat-cell">{c.slug}</td>                    <td className="rg-right">                      <div className="rg-admin-row-actions">                        <button className="rg-chip-btn" onClick={() => setEditingCategory(c)}>                          {t("admin.edit")}                        </button>                        <button                          className="rg-chip-btn rg-chip-btn-danger"                          onClick={() => handleDeleteCategory(c)}                        >
-                          {t("admin.delete")}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {categories.length === 0 && (
+          <>
+            <div className="rg-admin-filters">
+              <input
+                className="rg-input"
+                placeholder={t("admin.searchCategoriesPlaceholder")}
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+              />
+            </div>
+
+            <div className="rg-admin-table-wrap">
+              <table className="rg-admin-table rg-admin-table-categories">
+                <thead>
                   <tr>
-                    <td colSpan={3} className="rg-admin-empty">
-                      {t("admin.noCategories")}
-                    </td>
+                    <th>{t("admin.thCategoryName")}</th>
+                    <th>{t("admin.thSlug")}</th>
+                    <th />
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredCategories.map((c) => (
+                    <tr key={c._id}>
+                      <td>
+                        <div className="rg-admin-product-cell">
+                          {c.cover ? (
+                            <img src={c.cover} alt="" className="rg-admin-thumb" />
+                          ) : (
+                            <div className="rg-admin-thumb rg-admin-thumb-empty" />
+                          )}
+                          <div className="rg-admin-product-name">
+                            {c.icon} {localizedName(c)}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="rg-admin-cat-cell">{c.slug}</td>
+                      <td className="rg-right">
+                        <div className="rg-admin-row-actions">
+                          <button className="rg-chip-btn" onClick={() => setEditingCategory(c)}>
+                            {t("admin.edit")}
+                          </button>
+                          <button
+                            className="rg-chip-btn rg-chip-btn-danger"
+                            onClick={() => handleDeleteCategory(c)}
+                          >
+                            {t("admin.delete")}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {filteredCategories.length === 0 && (
+                    <tr>
+                      <td colSpan={3} className="rg-admin-empty">
+                        {categorySearch ? t("admin.noCategoryMatch") : t("admin.noCategories")}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
-       </main>
+      </main>
 
       {editing && (
         <div
@@ -357,6 +409,24 @@ export function AdminDashboard() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        open={Boolean(deleteTarget)}
+        title={`${t("admin.delete")}?`}
+        message={
+          deleteTarget
+            ? deleteTarget.kind === "product"
+              ? `Delete "${localizedName(deleteTarget.item)}"? This cannot be undone.`
+              : `Delete "${localizedName(deleteTarget.item)}"? Products in it will keep their reference but the category will vanish from menus.`
+            : ""
+        }
+        confirmLabel={t("admin.delete")}
+        cancelLabel={t("form.cancel")}
+        busy={deleting}
+        error={deleteError}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

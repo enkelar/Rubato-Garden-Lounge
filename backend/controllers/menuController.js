@@ -8,6 +8,7 @@ function pick(base, sq, lang){
     return base;
 }
 
+// Reads language from query string and returns 'sq' or 'en
 function getLang(req){
     return req.query.lang === 'sq' ? 'sq' : 'en';
 }
@@ -15,12 +16,14 @@ function getLang(req){
 // GET /api/menu - get all categories home page
 export const getMenuData = async (req, res) => {
     try {
-        const lang = getLang(req);
-        const cacheKey = `menu:${lang}`;
-        const cached = cache.get(cacheKey);
+        const lang = getLang(req); // Determine language for localization
+        const cacheKey = `menu:${lang}`; // Build a cache key based on language
+        const cached = cache.get(cacheKey); // Check is response is already cached
         if (cached) return res.status(200).json(cached);
 
+        // Fetch all categories and sort them by name
         const categories = await categoryModel.find().sort({ name: 1 });
+        // Convert category data into the preferred language
         const localized = categories.map(cat => ({
             _id: cat._id,
             slug: cat.slug,
@@ -30,8 +33,10 @@ export const getMenuData = async (req, res) => {
             cover: cat.cover,
             note: pick(cat.note, cat.noteSq, lang)
         }));
-        const payload = { categories: localized };
 
+        // Prepare response payload (core info)
+        const payload = { categories: localized };
+        // Save payload in cache
         cache.set(cacheKey, payload);
         res.status(200).json(payload);
     } catch (error) {
@@ -48,12 +53,14 @@ export const getProductsByCategory = async (req, res) => {
         const cached = cache.get(cacheKey);
         if (cached) return res.status(200).json(cached);
 
+        // Find category by slug
         const category = await categoryModel.findOne({ slug });
 
         if (!category) {
             return res.status(404).json({ error: 'Category not found' });
         }
-
+        
+        // Find all products that belong to category
         const products = await productModel.find({ category: category._id });
 
         // Loops through products, diplays the lists
@@ -65,6 +72,7 @@ export const getProductsByCategory = async (req, res) => {
             image: product.image
         }));
 
+        // Final response structure
         const payload = {
             success: true,
             data: {
@@ -89,14 +97,16 @@ export const getProductsByCategory = async (req, res) => {
 export const getProductById = async (req, res) => {
     try {
         const lang = getLang(req);
-        const slug = req.params.slug;
+        const slug = req.params.slug; // Read params from URL
         const productId = req.params.productId;
 
+        // Find category by slug first
         const category = await categoryModel.findOne({ slug });
         if (!category) {
             return res.status(404).json({ error: 'Category not found' });
         }
 
+        // Find product that matched both ID and category
         const product = await productModel.findOne({
             _id: productId,
             category: category._id
@@ -105,8 +115,6 @@ export const getProductById = async (req, res) => {
         if (!product) {
             return res.status(404).json({ error: 'Product not found' });
         }
-
-        const shareUrl = `${req.protocol}://${req.get('host')}/menu/${slug}/${product._id.toString()}`;
 
         res.json({
             success: true,
@@ -123,8 +131,7 @@ export const getProductById = async (req, res) => {
                     price: product.price,
                     image: product.image,
                     details: pick(product.details, product.detailsSq, lang)
-                },
-                shareUrl
+                }
             }
         });
     } catch (error) {

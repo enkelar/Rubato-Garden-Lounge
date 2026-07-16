@@ -1,0 +1,19 @@
+.rg-modal-sm {
+  max-width: 400px;
+}
+
+.rg-confirm-message {
+  color: var(--rg-ink);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 4px;
+}
+
+.rg-btn-danger {
+  background: #df5239;
+  color: var(--rg-ink);
+}
+
+.rg-btn-danger:hover {
+  background: #c94a33;
+}

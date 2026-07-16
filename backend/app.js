@@ -13,20 +13,21 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 const app = express();
 
 // Security and middleware
-app.use(helmet());
-app.use(compression());
+app.use(helmet()); // HTTP headers security
+app.use(compression()); // compresses responses (gzip), reduce bandwidth, speedup
 app.use(cors());
-app.use(express.json({limit: '100kb'}));
+app.use(express.json({limit: '100kb'})); // clients can't send huge JSON payloads
 
 // General API rate limit
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 300,
+  max: 300, // 300 requests per 15 min per IP
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: "Too many requests, please try again later." }
 });
 
+// Apply rate limiter to all routes except /api/menu
 app.use((req, res, next) => {
   if (req.path.startsWith('/api/menu')) return next(); // public menu is cached + unthrottled
   return generalLimiter(req, res, next);

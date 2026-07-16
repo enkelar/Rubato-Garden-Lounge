@@ -2,130 +2,143 @@
   animation: rg-fade 0.4s ease both;
 }
 
-.rg-detail-hero {
-  position: relative;
-  width: min(70%, 420px);
-  max-width: 420px;
-  margin: 68px auto 28px;
-  aspect-ratio: 4 / 3;
+.rg-detail-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 28px 20px 0;
+}
+
+.rg-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rg-ink-soft);
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+}
+
+.rg-detail-back:hover {
+  color: var(--rg-accent);
+}
+
+/* Card */
+.rg-item-card {
+  background: var(--rg-card-light);
+  border-radius: 22px;
   overflow: hidden;
-  border-radius: 24px;
   box-shadow: var(--rg-shadow);
-  border: 2px solid var(--rg-accent);
+  border: 1px solid rgba(212, 175, 55, 0.25);
 }
 
-.rg-detail-hero img {
+.rg-item-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, #273c2f 0%, #1c2d21 100%);
+}
+
+.rg-item-card-media img {
   width: 100%;
   height: 100%;
-  max-width: 100%;
-  max-height: 100%;
   object-fit: cover;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: block;
 }
 
-.rg-detail-img-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #f2dfae 0%, #d9b24d 100%);
+.rg-item-card-media-fallback {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--rg-bg);
-  padding: 18px;
-}
-
-.rg-close {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background: #142219;
-  color: var(--rg-accent);
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  font-size: 18px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  text-decoration: none;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-  z-index: 10;
-}
-
-.rg-detail-body {
-  max-width: 440px;
-  margin: 0 auto;
-  padding: 20px 20px 0;
-  padding: 20px 20px 0;
-}
-
-.rg-detail-name {
+  padding: 20px;
   font-family: var(--rg-font-display);
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 600;
   color: var(--rg-ink);
-  margin: 0 0 8px;
-  line-height: 1.1;
 }
 
-.rg-detail-price {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--rg-accent);
-  margin-bottom: 20px;
+.rg-item-card-body {
+  padding: 22px 26px 28px;
 }
 
-.rg-section-label {
+.rg-item-card-eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 11px;
+  font-weight: 700;
+  color: #96741f;
+  margin-bottom: 8px;
+}
+
+.rg-item-card-headline {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.rg-item-card-name {
+  font-family: var(--rg-font-display);
+  font-size: 28px;
   font-weight: 600;
-  color: var(--rg-leaf);
-  margin-bottom: 7px;
-}
-
-.rg-section {
-  margin-bottom: 20px;
-}
-
-.rg-section p {
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--rg-ink);
+  color: #142219;
+  line-height: 1.15;
   margin: 0;
 }
 
-.rg-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 24px;
+.rg-item-card-price {
+  font-family: var(--rg-font-display);
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 600;
+  color: #142219;
+  white-space: nowrap;
+}
+
+.rg-item-card-desc {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(20, 34, 25, 0.75);
+  margin: 0;
+}
+
+.rg-item-card-divider {
+  height: 1px;
+  background: rgba(20, 34, 25, 0.12);
+  margin: 18px 0 16px;
+}
+
+.rg-item-card-meta-label {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: rgba(20, 34, 25, 0.55);
+  margin-bottom: 6px;
+}
+
+.rg-item-card-meta-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(20, 34, 25, 0.75);
+  margin: 0;
 }
 
 @media (max-width: 560px) {
-  .rg-detail-hero {
-    width: min(65%, 280px);
-    max-width: 280px;
-    margin: 45px auto 18px;
-    border-radius: 20px;
+  .rg-item-card-body {
+    padding: 18px 20px 22px;
   }
 
-  .rg-detail-body {
-    max-width: 300px;
-    padding: 16px 20px 0;
+  .rg-item-card-name {
+    font-size: 23px;
   }
 
-  .rg-detail-name {
-    font-size: 24px;
-  }
-
-  .rg-actions {
-    flex-direction: column;
+  .rg-item-card-price {
+    font-size: 18px;
   }
 }

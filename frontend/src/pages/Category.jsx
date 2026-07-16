@@ -69,7 +69,7 @@ export function CategoryView() {
               <div className="rg-item-body">
                 <h3 className="rg-item-name">{item.name}</h3>
                 <p className="rg-item-desc">{item.description}</p>
-                <div className="rg-item-price">{item.price}</div>
+                <div className="rg-item-price">{item.price} €</div>
               </div>
             </Link>
           ))}

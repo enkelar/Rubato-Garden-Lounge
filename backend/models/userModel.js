@@ -11,16 +11,19 @@ const adminSchema = new mongoose.Schema({
     isAdmin: { type: Boolean, default: true, immutable: true }
 }, { timestamps: true });
 
+// hash psw before storing
 adminSchema.pre('save', async function() {
     if (!this.isModified('password')) return;
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(10); // Generate a bcrypt salt with 10 rounds
     this.password = await bcrypt.hash(this.password, salt);
 });
 
+// compare given psw to hashed psw
 adminSchema.methods.comparePassword = async function(password) {
     return await bcrypt.compare(password, this.password);
 };
 
+// generate JWT authentication token for admin
 adminSchema.methods.generateAuthToken = function() {
     return jwt.sign(
         { _id: this._id, name: this.name, email: this.email, isAdmin: true },
@@ -31,7 +34,7 @@ adminSchema.methods.generateAuthToken = function() {
 
 const Admin = mongoose.model('Admin', adminSchema);
 
-// Used when creating admins (seed script)
+// validation when creating admins (seed script)
 const validate = (data) => {
     const schema = Joi.object({
         name: Joi.string().required().min(3).max(50).label('Name'),
@@ -41,7 +44,7 @@ const validate = (data) => {
     return schema.validate(data);
 };
 
-// Used for login — no name required
+// validation for login
 const validateLogin = (data) => {
     const schema = Joi.object({
         email: Joi.string().email().required().label('Email'),

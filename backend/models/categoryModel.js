@@ -15,10 +15,11 @@ const categorySchema = new mongoose.Schema({
 
 // Generates slug before saving the category
 categorySchema.pre("save", function (next) {
+  // If the name was changed or slug does not exist, generate a new slug
   if (this.isModified("name") || !this.slug) {
     this.slug = generateSlug(this.name);
   }
-  next();
+  next(); // Continue to the next step in the save process
 });
 
 export default mongoose.model('Category', categorySchema);
