@@ -7,8 +7,6 @@ import "./adminProductForm.css";
 const EMPTY = {
   name: "",
   nameSq: "",
-  description: "",
-  descriptionSq: "",
   icon: "",
   cover: "",
   note: "",
@@ -24,8 +22,6 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
       ? {
           name: initial.name || "",
           nameSq: initial.nameSq || "",
-          description: initial.description || "",
-          descriptionSq: initial.descriptionSq || "",
           icon: initial.icon || "",
           cover: initial.cover || "",
           note: initial.note || "",
@@ -76,7 +72,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
     e.preventDefault();
     setError(null);
 
-    if (!form.name || !form.description) {
+    if (!form.name) {
       setError(t("categoryForm.requiredError"));
       return;
     }
@@ -143,27 +139,6 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
           <img src={form.cover} alt="Preview" />
         </div>
       )}
-      {/* Description - English */}
-      <label className="rg-field">
-        <span className="rg-field-form-label">{t("form.description")}</span>
-        <textarea 
-           className="rg-input rg-textarea" 
-           rows={2} 
-           required value={form.description} 
-           onChange={(e) => set("description", 
-           e.target.value)} />
-      </label>
-      {/* Description - Albanian */}
-      <label className="rg-field">
-        <span className="rg-field-form-label rg-field-label-sq">{t("form.description")} (SQ)</span>
-        <textarea
-          className="rg-input rg-textarea rg-input-sq"
-          rows={2}
-          placeholder="Përshkrimi në shqip (opsionale)"
-          value={form.descriptionSq}
-          onChange={(e) => set("descriptionSq", e.target.value)}
-        />
-      </label>
       {/* Note - English */}
       <label className="rg-field">
         <span className="rg-field-form-label">{t("categoryForm.note")}</span>

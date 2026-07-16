@@ -69,7 +69,7 @@ export default {
   "categoryForm.cover": "Cover image",
   "categoryForm.note": "Note",
   "categoryForm.createCategory": "Create category",
-  "categoryForm.requiredError": "Name and description are required.",
+  "categoryForm.requiredError": "Name is required.",
 
   // Product form
   "form.name": "Name",

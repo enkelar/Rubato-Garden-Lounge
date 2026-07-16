@@ -28,7 +28,6 @@ export const getMenuData = async (req, res) => {
             _id: cat._id,
             slug: cat.slug,
             name: pick(cat.name, cat.nameSq, lang),
-            description: pick(cat.description, cat.descriptionSq, lang),
             icon: cat.icon,
             cover: cat.cover,
             note: pick(cat.note, cat.noteSq, lang)
@@ -78,7 +77,6 @@ export const getProductsByCategory = async (req, res) => {
             data: {
                 slug: category.slug,
                 name: pick(category.name, category.nameSq, lang),
-                description: pick(category.description, category.descriptionSq, lang),
                 icon: category.icon,
                 cover: category.cover,
                 note: pick(category.note, category.noteSq, lang),
