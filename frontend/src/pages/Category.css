@@ -152,14 +152,14 @@
   width: 76px;
   height: 76px;
   border-radius: 11px;
-  background: linear-gradient(135deg, #efe0b2 0%, #d4af37be 100%);
+  background: linear-gradient(135deg, #182b1f 0%, #142219 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   font-size: 10px;
   font-weight: 600;
-  color: var(--rg-bg);
+  color: rgba(255, 255, 255, 0.715);
   padding: 6px;
   word-break: break-word;
 }

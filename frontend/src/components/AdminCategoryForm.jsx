@@ -79,13 +79,16 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
 
     setBusy(true); // show saving state
     try {
+      let saved;
       if (initial) {
-        await api.updateCategory(initial._id, form);
+        const res = await api.updateCategory(initial._id, form);
+        saved = res.category;
       } else {
-        await api.createCategory(form);
+        const res = await api.createCategory(form);
+        saved = res.category;
       }
-      onDone();
-    } catch (err) {
+  onDone(saved);
+} catch (err) {
       setError(err.message || "Save failed");
     } finally {
       setBusy(false);

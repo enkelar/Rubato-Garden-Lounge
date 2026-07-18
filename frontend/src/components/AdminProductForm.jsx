@@ -85,12 +85,15 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
 
     setBusy(true);
     try {
+      let saved;
       if (initial) {
-        await api.updateProduct(initial._id, payload);
+        const res = await api.updateProduct(initial._id, payload);
+        saved = res.product;
       } else {
-        await api.createProduct(payload);
+        const res = await api.createProduct(payload);
+        saved = res.product;
       }
-      onDone(); // Notify parent to refresh/close
+    onDone(saved); // Notify parent to refresh/close
     } catch (err) {
       setError(err.message || "Save failed");
     } finally {

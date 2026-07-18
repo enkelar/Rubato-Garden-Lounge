@@ -83,15 +83,6 @@ export function AdminDashboard() {
   });
 }, [categories, categorySearch, language]);
 
-  async function reloadAll() {
-    const [catRes, prodRes] = await Promise.all([
-      api.getCategories(),
-      api.getProducts(),
-    ]);
-    setCategories(catRes.categories || []);
-    setProducts(prodRes.products || []);
-  }
-
   function handleDelete(p) {
     setDeleteError(null);
     setDeleteTarget({ kind: "product", item: p });
@@ -231,6 +222,7 @@ export function AdminDashboard() {
                                 src={p.image}
                                 alt=""
                                 className="rg-admin-thumb"
+                                loading="lazy"
                               />
                             ) : (
                               <div className="rg-admin-thumb rg-admin-thumb-empty" />
@@ -302,7 +294,12 @@ export function AdminDashboard() {
                       <td>
                         <div className="rg-admin-product-cell">
                           {c.cover ? (
-                            <img src={c.cover} alt="" className="rg-admin-thumb" />
+                            <img 
+                            src={c.cover} 
+                            alt="" 
+                            className="rg-admin-thumb" 
+                            loading="lazy"
+                            />
                           ) : (
                             <div className="rg-admin-thumb rg-admin-thumb-empty" />
                           )}
@@ -366,9 +363,14 @@ export function AdminDashboard() {
             <AdminProductForm
               initial={editing === "new" ? null : editing}
               categories={categories}
-              onDone={async () => {
+              onDone={(savedProduct)=> {
                 setEditing(null);
-                await reloadAll();
+                setProducts((prev) => {
+                  const exists = prev.some((p) => p._id === savedProduct._id);
+                  return exists
+                  ? prev.map((p)=>(p._id === savedProduct._id ? savedProduct : p))
+                  : [...prev, savedProduct];
+                });
               }}
               onCancel={() => setEditing(null)}
             />
@@ -400,9 +402,14 @@ export function AdminDashboard() {
             </div>
             <AdminCategoryForm
               initial={editingCategory === "new" ? null : editingCategory}
-              onDone={async () => {
+              onDone={(savedCategory) => {
                 setEditingCategory(null);
-                await reloadAll();
+                setCategories((prev) => {
+                  const exists = prev.some((c) => c._id === savedCategory._id);
+                  return exists
+                  ? prev.map((c) => (c._id === savedCategory._id ? savedCategory : c))
+                  :[...prev, savedCategory];
+                });
               }}
               onCancel={() => setEditingCategory(null)}
             />

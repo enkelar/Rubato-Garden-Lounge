@@ -1,21 +1,30 @@
 import { useState, useEffect } from "react";
 
-// Module-level cache — lives outside the hook so it survives component
-// remounts. Cleared on full page reload.
+// Module-level cache — survives component remounts. Cleared on full page reload.
 const cacheStore = new Map();
-const DEFAULT_TTL_MS = 60 * 1000; // 60s — matches server cache staleness window
+const DEFAULT_TTL_MS = 60 * 1000;
+const MAX_CACHE_ENTRIES = 50;
+
+function setCacheEntry(key, value) {
+  if (cacheStore.size >= MAX_CACHE_ENTRIES && !cacheStore.has(key)) {
+    const oldestKey = cacheStore.keys().next().value;
+    cacheStore.delete(oldestKey);
+  }
+  cacheStore.set(key, value);
+}
 
 export function useFetch(url, options = {}) {
   const { errorMessage = "Request failed", ttl = DEFAULT_TTL_MS } = options;
 
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(url));
 
   useEffect(() => {
     if (!url) {
-
       // eslint-disable-next-line react-hooks/set-state-in-effect
+      setData(null);
+      setError(null);
       setLoading(false);
       return;
     }
@@ -30,23 +39,25 @@ export function useFetch(url, options = {}) {
       return;
     }
 
+    const controller = new AbortController();
     let cancelled = false;
+
     setLoading(true);
     setError(null);
 
-    fetch(url)
+    fetch(url, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error(errorMessage);
         return res.json();
       })
       .then((json) => {
         if (!cancelled) {
-          cacheStore.set(url, { data: json, timestamp: Date.now() });
+          setCacheEntry(url, { data: json, timestamp: Date.now() });
           setData(json);
         }
       })
       .catch((err) => {
-        if (!cancelled) {
+        if (!cancelled && err.name !== "AbortError") {
           console.error(err);
           setError(err.message);
         }
@@ -57,6 +68,7 @@ export function useFetch(url, options = {}) {
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [url, errorMessage, ttl]);
 
