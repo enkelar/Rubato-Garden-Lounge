@@ -6,7 +6,7 @@ const categorySchema = new mongoose.Schema({
   nameSq: { type: String },
   slug: { type: String, required: true, unique: true, lowercase: true },
   icon: { type: String, default: '🍽️' },
-  cover: { type: String, default: 'https://via.placeholder.com/400?text=Category' },
+  cover: { type: String, default: '/category-placeholder.svg' },
   note: { type: String },
   noteSq: { type: String }
 });

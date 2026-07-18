@@ -3,7 +3,7 @@ import categoryModel from '../models/categoryModel.js';
 import productModel from '../models/productModel.js';
 
 const router = express.Router();
-const SITE_URL = 'https://yourdomain.com'; // match SEO.jsx
+const SITE_URL = process.env.SITE_URL || 'https://yourdomain.com';
 
 router.get('/', async (req, res) => {
   try {

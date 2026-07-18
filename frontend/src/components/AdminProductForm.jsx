@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAdminApi } from "../services/adminApi";
 import { useLanguage } from "../context/LanguageContext";
+import { useImageUpload } from "../hooks/useImageUpload";
+import { useFormState } from "../hooks/useFormState";
 import "./adminProductForm.css";
 
 // Default empty form values
@@ -21,54 +23,37 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
   const api = useAdminApi();
   const { t } = useLanguage(); // translation method
   // Initialize form state from initial (edit) or empty/default (create)
-  const [form, setForm] = useState(() =>
-    initial
-      ? {
-          name: initial.name || "",
-          nameSq: initial.nameSq || "",
-          category: initial.category?._id || initial.category || "",
-          price: initial.price ?? "",
-          image: initial.image || "",
-          description: initial.description || "",
-          descriptionSq: initial.descriptionSq || "",
-          details: initial.details || "",
-          detailsSq: initial.detailsSq || "",
-        }
-      : { ...EMPTY, category: categories[0]?._id || "" } // default to first category
-  );
+  const [form, set] = useFormState(
+  initial
+    ? {
+        name: initial.name || "",
+        nameSq: initial.nameSq || "",
+        category: initial.category?._id || initial.category || "",
+        price: initial.price ?? "",
+        image: initial.image || "",
+        description: initial.description || "",
+        descriptionSq: initial.descriptionSq || "",
+        details: initial.details || "",
+        detailsSq: initial.detailsSq || "",
+      }
+    : { ...EMPTY, category: categories[0]?._id || "" }
+);
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const { upload, uploading, error: uploadError } = useImageUpload();
 
-  function set(key, value) {
-    setForm((f) => ({ ...f, [key]: value }));
+ async function handleFileChange(e) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  try {
+    const publicUrl = await upload(file);
+    set("image", publicUrl);
+  } catch {
+    // error already captured in uploadError
+  } finally {
+    e.target.value = "";
   }
-
-  async function handleFileChange(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setError(null);
-    setUploading(true);
-    try {
-      const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type, file.size);
-
-      const putRes = await fetch(uploadURL, {
-        method: "PUT",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-
-      if (!putRes.ok) throw new Error("Image upload to storage failed.");
-
-      set("image", publicUrl);
-    } catch (err) {
-      setError(err.message || "Image upload failed");
-    } finally {
-      setUploading(false);
-      e.target.value = "";
-    }
-  }
+}
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -187,7 +172,7 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
         />
       </label>
 
-      {error && <p className="rg-auth-error">{error}</p>}
+      {(error || uploadError) && <p className="rg-auth-error">{error || uploadError}</p>}
 
       <div className="rg-form-actions">
         <button type="button" className="rg-btn rg-btn-ghost" onClick={onCancel}>{t("form.cancel")}</button>

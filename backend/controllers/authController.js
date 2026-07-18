@@ -1,41 +1,31 @@
 import userModel from "../models/userModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { httpError } from "../utils/httpError.js";
 
 const { Admin, validateLogin } = userModel;
 
-export const adminLogin = async (req, res) => {
-    try {
+export const adminLogin = asyncHandler(async (req, res) => {
+  const { error } = validateLogin(req.body);
+  if (error) throw httpError(400, error.details[0].message);
 
-        // Validate the req body with validateLogin function, if fail 400 bad request message
-        const { error } = validateLogin(req.body);
-        if (error) return res.status(400).json({ message: error.details[0].message });
+  const admin = await Admin.findOne({ email: req.body.email });
+  if (!admin) throw httpError(400, 'Invalid email or password');
 
-        // Search for admin user by email
-        const admin = await Admin.findOne({ email: req.body.email });
-        if (!admin) return res.status(400).json({ message: 'Invalid email or password' });
+  if (!admin.isAdmin) throw httpError(403, 'Access denied. Not an admin.');
 
-        // Check admin role
-        if (!admin.isAdmin) {
-            return res.status(403).json({ message: 'Access denied. Not an admin.' });
-        }
+  const validPassword = await admin.comparePassword(req.body.password);
+  if (!validPassword) throw httpError(400, 'Invalid email or password');
 
-        // Compare password to the hashed psw in the database
-        const validPassword = await admin.comparePassword(req.body.password);
-        if (!validPassword) return res.status(400).json({ message: 'Invalid email or password' });
+  const token = admin.generateAuthToken();
 
-        // Generate authentication token for the logged-in admin
-        const token = admin.generateAuthToken();
-
-        res.status(200).json({
-            message: 'Login successful',
-            token,
-            admin: {
-                id: admin._id,
-                name: admin.name,
-                email: admin.email,
-                isAdmin: admin.isAdmin
-            }
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+  res.status(200).json({
+    message: 'Login successful',
+    token,
+    admin: {
+      id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      isAdmin: admin.isAdmin,
+    },
+  });
+});

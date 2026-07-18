@@ -72,19 +72,11 @@ export function AdminAuth() {
 
         {error && <p className="rg-auth-error">{error}</p>}
 
-        <button
-  type="submit"
-  className="rg-auth-btn rg-auth-btn-primary rg-auth-submit"
-  disabled={busy}
->
+<button type="submit" className="rg-btn rg-btn-primary rg-auth-submit" disabled={busy}>
   {busy ? t("auth.signingIn") : t("auth.signIn")}
 </button>
 
-<button
-  type="button"
-  className="rg-auth-btn rg-auth-btn-ghost rg-auth-back"
-  onClick={() => navigate("/")}
->
+<button type="button" className="rg-btn rg-btn-ghost rg-auth-back" onClick={() => navigate("/")}>
   {t("auth.goBack")}
 </button>
       </form>

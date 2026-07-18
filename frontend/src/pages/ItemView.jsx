@@ -22,13 +22,6 @@ export function ItemView() {
   const { language, t } = useLanguage();
   const { cat, item, error, loading } = useItemPage(slug, itemId, language);
 
-  const handleImageError = (e) => {
-    e.target.style.display = "none";
-    if (e.target.nextElementSibling) {
-      e.target.nextElementSibling.style.display = "flex";
-    }
-  };
-
   return (
     <div className="rg-app rg-detail">
       <main className="rg-detail-wrap">
@@ -55,20 +48,14 @@ export function ItemView() {
         {!loading && item && (
           <div className="rg-item-card">
             <div className="rg-item-card-media">
-              {item.image ? (
-                <>
-                  <img
-                    src={item.image}
-                    alt={`${item.name} - ${item.description}`}
-                    onError={handleImageError}
-                  />
-                  <div className="rg-item-card-media-fallback" style={{ display: "none" }}>
-                    {item.name}
-                  </div>
-                </>
-              ) : (
-                <div className="rg-item-card-media-fallback">{item.name}</div>
-              )}
+              <img
+                 src={item.image || "/product-placeholder.svg"}
+                 alt={`${item.name} - ${item.description}`}
+                 onError={(e) => {
+                   e.target.onerror = null;
+                   e.target.src = "/product-placeholder.svg";
+                 }}
+               />
             </div>
 
             <div className="rg-item-card-body">

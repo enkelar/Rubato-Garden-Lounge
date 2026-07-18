@@ -5,7 +5,7 @@
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid rgba(212, 175, 55, 0.4);
-  background: #142219;
+  background: var(--rg-bg);
   color: var(--rg-ink-soft);
   font-size: 12px;
   font-weight: 600;

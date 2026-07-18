@@ -7,6 +7,7 @@ import AdminProductForm from "../components/AdminProductForm";
 import AdminCategoryForm from "../components/AdminCategoryForm";
 import LanguageToggle from "../components/LanguageToggle";
 import ConfirmModal from "../components/ConfirmModal";
+import Modal from "../components/Modal";
 import "./Rubato.css";
 import "./adminDashboard.css";
 
@@ -217,16 +218,13 @@ export function AdminDashboard() {
                       <tr key={p._id}>
                         <td>
                           <div className="rg-admin-product-cell">
-                            {p.image ? (
-                              <img
-                                src={p.image}
-                                alt=""
-                                className="rg-admin-thumb"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div className="rg-admin-thumb rg-admin-thumb-empty" />
-                            )}
+                            <img
+                               src={p.image || "/product-placeholder.svg"}
+                               alt=""
+                               className="rg-admin-thumb"
+                               loading="lazy"
+                               onError={(e) => { e.target.onerror = null; e.target.src = "/product-placeholder.svg"; }}
+                             />
                             <div className="rg-admin-product-name">{localizedName(p)}</div>
                           </div>
                         </td>
@@ -293,16 +291,13 @@ export function AdminDashboard() {
                     <tr key={c._id}>
                       <td>
                         <div className="rg-admin-product-cell">
-                          {c.cover ? (
-                            <img 
-                            src={c.cover} 
-                            alt="" 
-                            className="rg-admin-thumb" 
-                            loading="lazy"
-                            />
-                          ) : (
-                            <div className="rg-admin-thumb rg-admin-thumb-empty" />
-                          )}
+                          <img
+                             src={c.cover || "/category-placeholder.svg"}
+                             alt=""
+                             className="rg-admin-thumb"
+                             loading="lazy"
+                             onError={(e) => { e.target.onerror = null; e.target.src = "/category-placeholder.svg"; }}
+                           />
                           <div className="rg-admin-product-name">
                             {c.icon} {localizedName(c)}
                           </div>
@@ -339,83 +334,47 @@ export function AdminDashboard() {
       </main>
 
       {editing && (
-        <div
-          className="rg-modal-overlay"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setEditing(null);
-          }}
-        >
-          <div className="rg-modal">
-            <div className="rg-modal-head">
-              <h2>
-                {editing === "new"
-                  ? t("admin.newProductTitle")
-                  : `${t("admin.editProductTitle")} ${editing.name}`}
-              </h2>
-              <button
-                className="rg-modal-close"
-                onClick={() => setEditing(null)}
-                aria-label="Close"
-              >
-                ×
-              </button>
-            </div>
-            <AdminProductForm
-              initial={editing === "new" ? null : editing}
-              categories={categories}
-              onDone={(savedProduct)=> {
-                setEditing(null);
-                setProducts((prev) => {
-                  const exists = prev.some((p) => p._id === savedProduct._id);
-                  return exists
-                  ? prev.map((p)=>(p._id === savedProduct._id ? savedProduct : p))
-                  : [...prev, savedProduct];
-                });
-              }}
-              onCancel={() => setEditing(null)}
-            />
-          </div>
-        </div>
-      )}
+  <Modal
+    title={editing === "new" ? t("admin.newProductTitle") : `${t("admin.editProductTitle")} ${editing.name}`}
+    onClose={() => setEditing(null)}
+  >
+    <AdminProductForm
+      initial={editing === "new" ? null : editing}
+      categories={categories}
+      onDone={(savedProduct) => {
+        setEditing(null);
+        setProducts((prev) => {
+          const exists = prev.some((p) => p._id === savedProduct._id);
+          return exists
+            ? prev.map((p) => (p._id === savedProduct._id ? savedProduct : p))
+            : [...prev, savedProduct];
+        });
+      }}
+      onCancel={() => setEditing(null)}
+    />
+  </Modal>
+)}
 
       {editingCategory && (
-        <div
-          className="rg-modal-overlay"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setEditingCategory(null);
-          }}
-        >
-          <div className="rg-modal">
-            <div className="rg-modal-head">
-              <h2>
-                {editingCategory === "new"
-                  ? t("admin.newCategoryTitle")
-                  : `${t("admin.editCategoryTitle")} ${editingCategory.name}`}
-              </h2>
-              <button
-                className="rg-modal-close"
-                onClick={() => setEditingCategory(null)}
-                aria-label="Close"
-              >
-                ×
-              </button>
-            </div>
-            <AdminCategoryForm
-              initial={editingCategory === "new" ? null : editingCategory}
-              onDone={(savedCategory) => {
-                setEditingCategory(null);
-                setCategories((prev) => {
-                  const exists = prev.some((c) => c._id === savedCategory._id);
-                  return exists
-                  ? prev.map((c) => (c._id === savedCategory._id ? savedCategory : c))
-                  :[...prev, savedCategory];
-                });
-              }}
-              onCancel={() => setEditingCategory(null)}
-            />
-          </div>
-        </div>
-      )}
+  <Modal
+    title={editingCategory === "new" ? t("admin.newCategoryTitle") : `${t("admin.editCategoryTitle")} ${editingCategory.name}`}
+    onClose={() => setEditingCategory(null)}
+  >
+    <AdminCategoryForm
+      initial={editingCategory === "new" ? null : editingCategory}
+      onDone={(savedCategory) => {
+        setEditingCategory(null);
+        setCategories((prev) => {
+          const exists = prev.some((c) => c._id === savedCategory._id);
+          return exists
+            ? prev.map((c) => (c._id === savedCategory._id ? savedCategory : c))
+            : [...prev, savedCategory];
+        });
+      }}
+      onCancel={() => setEditingCategory(null)}
+    />
+  </Modal>
+)}
 
       <ConfirmModal
         open={Boolean(deleteTarget)}

@@ -13,13 +13,6 @@ export function CategoryView() {
   });
   const cat = data?.data || null;
 
-  const handleImageError = (e) => {
-    e.target.style.display = "none";
-    if (e.target.nextElementSibling) {
-      e.target.nextElementSibling.style.display = "block";
-    }
-  };
-
   return (
     <div className="rg-app">
       {cat && (
@@ -59,25 +52,16 @@ export function CategoryView() {
               className="rg-item"
               style={{ animationDelay: `${i * 55}ms` }}
             >
-              {item.image ? (
-                <>
-                  <img
-                    src={item.image}
-                    alt={`${item.name} - ${item.description}`}
-                    className="rg-item-img"
-                    loading="lazy"
-                    onError={handleImageError}
-                  />
-                  <div
-                    className="rg-item-img-placeholder"
-                    style={{ display: "none" }}
-                  >
-                    {item.name}
-                  </div>
-                </>
-              ) : (
-                <div className="rg-item-img-placeholder">{item.name}</div>
-              )}
+              <img
+                 src={item.image || "/product-placeholder.svg"}
+                 alt={`${item.name} - ${item.description}`}
+                 className="rg-item-img"
+                 loading="lazy"
+                 onError={(e) => {
+                   e.target.onerror = null;
+                   e.target.src = "/product-placeholder.svg";
+                 }}
+                />
               <div className="rg-item-body">
                 <h3 className="rg-item-name">{item.name}</h3>
                 <p className="rg-item-desc">{item.description}</p>

@@ -1,60 +1,47 @@
-import crypto from 'crypto'; // for generatin random file names
-import { PutObjectCommand } from '@aws-sdk/client-s3'; // AWS SDK command used to create an upload request to S3/R2 
-import {getSignedUrl} from '@aws-sdk/s3-request-presigner'; // helper - creates temporary signed upload URL
-import { r2Client, R2_BUCKET_NAME, R2_PUBLIC_URL} from '../services/r2Client.js';
+import crypto from 'crypto';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { r2Client, R2_BUCKET_NAME, R2_PUBLIC_URL } from '../services/r2Client.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { httpError } from '../utils/httpError.js';
 
-// allowed image types & extensions
 const ALLOWED_TYPES = {
-    'image/jpeg': 'jpg',
-    'image/png': 'png',
-    'image/gif': 'gif',
-    'image/webp': 'webp',
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
 };
 
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
-// Generate a signed URL for uploading an image
-export const getImageUploadUrl = async (req, res) => {
-    try{
-        // make sure R2 is configured on the server
-        if (!R2_BUCKET_NAME || !R2_PUBLIC_URL) {
-            return res.status(500).json({ error: 'R2 is not configured on the server.' });
-        }
+export const getImageUploadUrl = asyncHandler(async (req, res) => {
+  if (!R2_BUCKET_NAME || !R2_PUBLIC_URL) {
+    throw httpError(500, 'R2 is not configured on the server.');
+  }
 
-        const { contentType, fileSize } = req.body;
+  const { contentType, fileSize } = req.body;
 
-        if (typeof fileSize !== 'number' || fileSize <= 0 || fileSize > MAX_FILE_SIZE_BYTES) {
-            return res.status(400).json({
-               message: `File size must be between 1 byte and ${MAX_FILE_SIZE_BYTES / (1024 * 1024)}MB.`
-        });
-}
-        const extension = ALLOWED_TYPES[contentType]; // convert content type to a file extension
+  if (typeof fileSize !== 'number' || fileSize <= 0 || fileSize > MAX_FILE_SIZE_BYTES) {
+    throw httpError(400, `File size must be between 1 byte and ${MAX_FILE_SIZE_BYTES / (1024 * 1024)}MB.`);
+  }
 
-        // reject unsupported image formats
-        if(!extension){
-            return res.status(400).json({
-                message: 'Unsupported image type. Use JPEG, PNG, WEBP, or GIF'
-            });
-        }
+  const extension = ALLOWED_TYPES[contentType];
+  if (!extension) {
+    throw httpError(400, 'Unsupported image type. Use JPEG, PNG, WEBP, or GIF');
+  }
 
-        // create unique file key inside the products folder
-        const key = `products/${crypto.randomUUID()}.${extension}`;
+  const key = `products/${crypto.randomUUID()}.${extension}`;
 
-        // build the S3/R2 upload command
-        const command = new PutObjectCommand({
-            Bucket: R2_BUCKET_NAME,
-            Key: key,
-            ContentType: contentType,
-        });
+  const command = new PutObjectCommand({
+    Bucket: R2_BUCKET_NAME,
+    Key: key,
+    ContentType: contentType,
+  });
 
-        // create temporary signed URL valid for 5 minutes
-        const uploadURL = await getSignedUrl(r2Client, command, {expiresIn: 300}); 
+  const uploadURL = await getSignedUrl(r2Client, command, { expiresIn: 300 });
 
-        res.status(200).json({
-            uploadURL,
-            publicUrl: `${R2_PUBLIC_URL}/${key}`,
-        });
-    } catch (error){
-        res.status(500).json({ error: 'Failed to generate upload URL', details: error.message });
-    }
-}
+  res.status(200).json({
+    uploadURL,
+    publicUrl: `${R2_PUBLIC_URL}/${key}`,
+  });
+});

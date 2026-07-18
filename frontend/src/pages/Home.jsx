@@ -13,13 +13,6 @@ export function HomeView() {
   });
   const categories = data?.categories || [];
 
-
-  const handleImageError = (e) => {
-    e.target.style.display = "none";
-    const fallback = e.target.nextElementSibling;
-    if (fallback) fallback.style.display = "flex";
-  };
-
   return (
     <div className="rg-app">
       
@@ -55,21 +48,16 @@ export function HomeView() {
               className="rg-card"
               style={{ animationDelay: `${i * 60}ms` }}
             >
-              {cat.cover && (
-                <img
-                  src={cat.cover}
-                  alt={`${cat.name} category`}
-                  className="rg-card-img"
-                  loading="lazy"
-                  onError={handleImageError}
-                />
-              )}
-              <div
-                className="rg-card-img-placeholder"
-                style={{ display: cat.cover ? "none" : "flex" }}
-              >
-                <span className="rg-card-placeholder-name">{cat.name}</span>
-              </div>
+              <img
+                src={cat.cover || "/category-placeholder.svg"}
+                alt={`${cat.name} category`}
+                className="rg-card-img"
+                loading="lazy"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/category-placeholder.svg";
+                }}
+              />
               <div className="rg-card-overlay" />
               <div className="rg-card-shine" />
               <div className="rg-card-content">

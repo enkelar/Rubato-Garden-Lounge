@@ -1,11 +1,11 @@
 .rg-app {
   background:
-    radial-gradient(circle at 100% 100%, #142219, transparent 50%), var(--rg-bg);
+    radial-gradient(circle at 100% 100%, var(--rg-bg), transparent 50%), var(--rg-bg);
 }
 
 .rg-admin-nav {
   border-bottom: 1px solid rgba(212, 175, 55, 0.24);
-  background: #142219;
+  background: var(--rg-bg);
 }
 
 .rg-admin-nav-inner {

@@ -10,6 +10,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import sitemapRoutes from "./routes/sitemapRoutes.js";
+import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 app.set('trust proxy', 1);
@@ -53,5 +54,7 @@ app.use("/sitemap.xml", sitemapRoutes);
 app.get("/", (req, res) => {
   res.json({ message: "Rubato API is running..." });
 });
+
+app.use(errorHandler);
 
 export default app;
