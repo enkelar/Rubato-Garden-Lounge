@@ -25,7 +25,7 @@ export const getMenuData = asyncHandler(async (req, res) => {
     return res.status(200).json(cached);
   }
 
-  const categories = await categoryModel.find().sort({ name: 1 });
+  const categories = await categoryModel.find().sort({ order: 1, name: 1 });
 
   const localized = categories.map(cat => ({
     _id: cat._id,

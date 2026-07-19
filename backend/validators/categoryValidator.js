@@ -7,4 +7,5 @@ export const categorySchema = Joi.object({
   cover: Joi.string().uri().allow('', null),
   note: Joi.string().trim().max(200).allow('', null),
   noteSq: Joi.string().trim().max(200).allow('', null),
+  order: Joi.number().integer().min(0).allow(null),
 });

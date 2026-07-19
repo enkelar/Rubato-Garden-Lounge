@@ -13,6 +13,7 @@ const EMPTY = {
   cover: "",
   note: "",
   noteSq: "",
+  order: "",
 };
 
 export function AdminCategoryForm({ initial, onDone, onCancel }) {
@@ -28,6 +29,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
         cover: initial.cover || "",
         note: initial.note || "",
         noteSq: initial.noteSq || "",
+        order: initial.order ?? "",
       }
     : { ...EMPTY }
 );
@@ -44,14 +46,19 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
       return;
     }
 
+    const payload = {
+      ...form,
+      order: form.order === "" ? null : Number(form.order),
+    };
+
     setBusy(true); // show saving state
     try {
       let saved;
       if (initial) {
-        const res = await api.updateCategory(initial._id, form);
+        const res = await api.updateCategory(initial._id, payload);
         saved = res.category;
       } else {
-        const res = await api.createCategory(form);
+        const res = await api.createCategory(payload);
         saved = res.category;
       }
   onDone(saved);
@@ -97,13 +104,29 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
             onChange={(e) => set("icon", e.target.value)}
           />
         </label>
-        {/* Cover image upload */}
-         <ImageUploadField
-           label={t("categoryForm.cover")}
-           value={form.cover}
-           onChange={(url) => set("cover", url)}
-         />
+        {/* Display order */}
+        <label className="rg-field">
+          <span className="rg-field-form-label">{t("categoryForm.order")}</span>
+          <input
+            className="rg-input"
+            type="number"
+            step="1"
+            min="0"
+            placeholder="0"
+            value={form.order}
+            onChange={(e) => set("order", e.target.value)}
+          />
+          <span className="rg-field-hint">{t("categoryForm.orderHint")}</span>
+        </label>
       </div>
+
+      {/* Cover image upload */}
+      <ImageUploadField
+        label={t("categoryForm.cover")}
+        value={form.cover}
+        onChange={(url) => set("cover", url)}
+      />
+
       {/* Note - English */}
       <label className="rg-field">
         <span className="rg-field-form-label">{t("categoryForm.note")}</span>
@@ -125,7 +148,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
         />
       </label>
       {/* Error message */}
-      {(error) && <p className="rg-auth-error">{error }</p>}
+      {error && <p className="rg-auth-error">{error}</p>}
 
       <div className="rg-form-actions">
         <button

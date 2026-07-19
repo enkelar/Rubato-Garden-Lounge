@@ -70,6 +70,8 @@ export default {
   "categoryForm.note": "Shënim",
   "categoryForm.createCategory": "Krijo kategorinë",
   "categoryForm.requiredError": "Emri dhe përshkrimi janë të detyrueshëm.",
+  "categoryForm.order": "Renditja e shfaqjes",
+"categoryForm.orderHint": "Numrat më të vegjël shfaqen të parët. Lëre bosh për ta shtuar në fund.",
 
   // Product form
   "form.name": "Emri",

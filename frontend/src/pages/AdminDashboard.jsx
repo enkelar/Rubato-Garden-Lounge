@@ -11,6 +11,15 @@ import Modal from "../components/Modal";
 import "./Rubato.css";
 import "./adminDashboard.css";
 
+function sortedCategoryList(list) {
+  return [...list].sort((a, b) => {
+    const oa = a.order ?? 0;
+    const ob = b.order ?? 0;
+    if (oa !== ob) return oa - ob;
+    return (a.name || "").localeCompare(b.name || "");
+  });
+}
+
 export function AdminDashboard() {
   const { logout } = useAuth();
   const { language, t } = useLanguage();
@@ -29,8 +38,6 @@ export function AdminDashboard() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [view, setView] = useState("products");
 
-  // Unified delete-confirmation state — works for both products and categories.
-  // deleteTarget.kind tells us which API call / which list to update.
   const [deleteTarget, setDeleteTarget] = useState(null); // { kind: "product" | "category", item }
   const [deleteError, setDeleteError] = useState(null);
   const [deleting, setDeleting] = useState(false);
@@ -76,13 +83,13 @@ export function AdminDashboard() {
   }, [products, search, filterCat]);
 
   const filteredCategories = useMemo(() => {
-  return categories.filter((c) => {
-    const name = language === "sq" && c?.nameSq ? c.nameSq : c?.name;
-    if (categorySearch && !name?.toLowerCase().includes(categorySearch.toLowerCase()))
-      return false;
-    return true;
-  });
-}, [categories, categorySearch, language]);
+    return sortedCategoryList(categories).filter((c) => {
+      const name = language === "sq" && c?.nameSq ? c.nameSq : c?.name;
+      if (categorySearch && !name?.toLowerCase().includes(categorySearch.toLowerCase()))
+        return false;
+      return true;
+    });
+  }, [categories, categorySearch, language]);
 
   function handleDelete(p) {
     setDeleteError(null);
@@ -276,6 +283,8 @@ export function AdminDashboard() {
                 onChange={(e) => setCategorySearch(e.target.value)}
               />
             </div>
+
+            {error && <div className="rg-error">{error}</div>}
 
             <div className="rg-admin-table-wrap">
               <table className="rg-admin-table rg-admin-table-categories">

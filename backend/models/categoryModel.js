@@ -8,7 +8,8 @@ const categorySchema = new mongoose.Schema({
   icon: { type: String, default: '🍽️' },
   cover: { type: String, default: '/category-placeholder.svg' },
   note: { type: String },
-  noteSq: { type: String }
+  noteSq: { type: String },
+  order: { type: Number, default: 0, index: true },
 });
 
 // Generates slug before saving the category

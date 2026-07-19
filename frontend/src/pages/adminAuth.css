@@ -39,40 +39,12 @@
   border: 1px solid rgba(212, 175, 55, 0.18);
 }
 
-.rg-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Labels now need to read on a dark card — use the lighter leaf tone */
 .rg-field-label {
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: 11px;
   font-weight: 600;
   color: var(--rg-leaf);
-}
-
-.rg-input {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(212, 175, 55, 0.2);
-  background: var(--rg-bg);
-  font-family: var(--rg-font-body);
-  font-size: 14px;
-  color: var(--rg-ink);
-}
-
-.rg-input:focus {
-  outline: none;
-  border-color: var(--rg-accent);
-}
-
-.rg-auth-error {
-  font-size: 13px;
-  color: #ff8f7a;
-  margin: 0;
 }
 
 .rg-auth-submit {

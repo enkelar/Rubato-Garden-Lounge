@@ -7,7 +7,7 @@ import { httpError } from "../utils/httpError.js";
 import { deleteR2ObjectByUrl } from "../utils/r2Delete.js";
 
 export const getCategories = asyncHandler(async (req, res) => {
-  const categories = await categoryModel.find().sort({ name: 1 });
+  const categories = await categoryModel.find().sort({ order: 1, name: 1 });
   res.status(200).json({ categories });
 });
 
@@ -17,11 +17,16 @@ export const createCategory = asyncHandler(async (req, res) => {
 
   const baseSlug = generateSlug(name);
   let slug = baseSlug;
-
   const existing = await categoryModel.findOne({ slug });
   if (existing) slug = `${baseSlug}-${Date.now()}`;
 
-  const category = await categoryModel.create({ ...req.body, slug });
+  let order = req.body.order;
+  if (order === undefined || order === null) {
+    const last = await categoryModel.findOne().sort('-order');
+    order = last ? last.order + 1 : 0;
+  }
+
+  const category = await categoryModel.create({ ...req.body, slug, order });
   cache.flushAll();
   res.status(201).json({ message: "Category created successfully", category });
 });
