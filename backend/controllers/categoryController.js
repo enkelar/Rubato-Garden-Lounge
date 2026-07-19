@@ -4,6 +4,7 @@ import cache from "../utils/cache.js";
 import { generateSlug } from "../utils/slug.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { httpError } from "../utils/httpError.js";
+import { deleteR2ObjectByUrl } from "../utils/r2Delete.js";
 
 export const getCategories = asyncHandler(async (req, res) => {
   const categories = await categoryModel.find().sort({ name: 1 });
@@ -30,6 +31,10 @@ export const updateCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
   const updateData = { ...req.body };
 
+  const existingCategory = await categoryModel.findById(id);
+  if (!existingCategory) throw httpError(404, "Category not found");
+  const oldCover = existingCategory.cover;
+
   if (name) {
     const baseSlug = generateSlug(name);
     let slug = baseSlug;
@@ -42,7 +47,10 @@ export const updateCategory = asyncHandler(async (req, res) => {
     new: true,
     runValidators: true,
   });
-  if (!category) throw httpError(404, "Category not found");
+
+  if ('cover' in req.body && oldCover && oldCover !== req.body.cover) {
+    await deleteR2ObjectByUrl(oldCover);
+  }
 
   cache.flushAll();
   res.status(200).json({ message: "Category updated successfully", category });
@@ -53,14 +61,13 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 
   const productCount = await productModel.countDocuments({ category: id });
   if (productCount > 0) {
-    throw httpError(
-      409,
-      `Cannot delete category — ${productCount} product(s) still reference it. Reassign or delete those products first.`
-    );
+    throw httpError(409, `Cannot delete category — ${productCount} product(s) still reference it. Reassign or delete those products first.`);
   }
 
   const category = await categoryModel.findByIdAndDelete(id);
   if (!category) throw httpError(404, "Category not found");
+
+  await deleteR2ObjectByUrl(category.cover);
   cache.flushAll();
   res.status(200).json({ message: "Category deleted successfully" });
 });

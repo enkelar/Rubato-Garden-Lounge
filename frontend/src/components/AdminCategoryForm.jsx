@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAdminApi } from "../services/adminApi";
 import { useLanguage } from "../context/LanguageContext";
-import { useImageUpload } from "../hooks/useImageUpload";
 import { useFormState } from "../hooks/useFormState";
+import ImageUploadField from "./ImageUploadField";
 import "./adminProductForm.css";
 
 // Default empty form values
@@ -33,21 +33,6 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
 );
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false); // save-in-progress state
-  const { upload, uploading, error: uploadError } = useImageUpload();
-
-  // handle image file upload to R2 via presigned URL
-  async function handleFileChange(e) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  try {
-    const publicUrl = await upload(file);
-    set("cover", publicUrl);
-  } catch {
-    // error already captured in uploadError
-  } finally {
-    e.target.value = "";
-  }
-}
 
   // handle form submit ( create or update category )
   async function handleSubmit(e) {
@@ -113,24 +98,12 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
           />
         </label>
         {/* Cover image upload */}
-        <label className="rg-field">
-          <span className="rg-field-form-label">{t("categoryForm.cover")}</span>
-          <input
-            className="rg-input rg-file-input"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            onChange={handleFileChange}
-            disabled={uploading}
-          />
-          {uploading && <span className="rg-upload-status">Uploading…</span>}
-        </label>
+         <ImageUploadField
+           label={t("categoryForm.cover")}
+           value={form.cover}
+           onChange={(url) => set("cover", url)}
+         />
       </div>
-      {/* Cover image preview */}
-      {form.cover && (
-        <div className="rg-image-preview">
-          <img src={form.cover} alt="Preview" />
-        </div>
-      )}
       {/* Note - English */}
       <label className="rg-field">
         <span className="rg-field-form-label">{t("categoryForm.note")}</span>
@@ -152,7 +125,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
         />
       </label>
       {/* Error message */}
-      {(error || uploadError) && <p className="rg-auth-error">{error || uploadError}</p>}
+      {(error) && <p className="rg-auth-error">{error }</p>}
 
       <div className="rg-form-actions">
         <button
@@ -165,7 +138,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
         <button
           type="submit"
           className="rg-btn rg-btn-primary"
-          disabled={busy || uploading}
+          disabled={busy}
         >
           {busy
             ? t("form.saving")

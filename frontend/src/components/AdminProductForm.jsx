@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAdminApi } from "../services/adminApi";
 import { useLanguage } from "../context/LanguageContext";
-import { useImageUpload } from "../hooks/useImageUpload";
 import { useFormState } from "../hooks/useFormState";
+import ImageUploadField from "./ImageUploadField";
 import "./adminProductForm.css";
 
 // Default empty form values
@@ -40,20 +40,6 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
 );
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
-  const { upload, uploading, error: uploadError } = useImageUpload();
-
- async function handleFileChange(e) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  try {
-    const publicUrl = await upload(file);
-    set("image", publicUrl);
-  } catch {
-    // error already captured in uploadError
-  } finally {
-    e.target.value = "";
-  }
-}
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -120,26 +106,12 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
           <input className="rg-input" type="number" step="0.01" min="0" required value={form.price} onChange={(e) => set("price", e.target.value)} />
         </label>
 
-        <label className="rg-field">
-          <span className="rg-field-form-label">{t("form.photo")}</span>
-          <input
-            className="rg-input rg-file-input"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            onChange={handleFileChange}
-            disabled={uploading}
-          />
-          {uploading && <span className="rg-upload-status">Uploading…</span>}
-        </label>
+        <ImageUploadField
+          label={t("form.photo")}
+          value={form.image}
+          onChange={(url) => set("image", url)}
+        />
       </div>
-
-      {form.image && (
-        <div className="rg-image-preview">
-          <img src={form.image} alt="Preview" />
-        </div>
-      )}
-
-
       <label className="rg-field">
         <span className="rg-field-form-label">{t("form.description")}</span>
         <textarea className="rg-input rg-textarea" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} />
@@ -172,11 +144,11 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
         />
       </label>
 
-      {(error || uploadError) && <p className="rg-auth-error">{error || uploadError}</p>}
+      {(error ) && <p className="rg-auth-error">{error}</p>}
 
       <div className="rg-form-actions">
         <button type="button" className="rg-btn rg-btn-ghost" onClick={onCancel}>{t("form.cancel")}</button>
-        <button type="submit" className="rg-btn rg-btn-primary" disabled={busy || uploading}>
+        <button type="submit" className="rg-btn rg-btn-primary" disabled={busy}>
           {busy ? t("form.saving") : initial ? t("form.saveChanges") : t("form.createProduct")}
         </button>
       </div>
