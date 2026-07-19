@@ -2,11 +2,10 @@ import { defineConfig } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 
-// https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
-    babel({ presets: [reactCompilerPreset()] })
+    ...(mode === 'test' ? [] : [babel({ presets: [reactCompilerPreset()] })]),
   ],
   server: {
     proxy: {
@@ -15,5 +14,14 @@ export default defineConfig({
         changeOrigin: true
       }
     }
-  }
-})
+  },
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: 'react',
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    globals: true,
+  },
+}))
