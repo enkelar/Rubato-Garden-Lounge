@@ -10,6 +10,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import sitemapRoutes from "./routes/sitemapRoutes.js";
+import previewRoutes from "./routes/previewRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
@@ -41,6 +42,8 @@ app.use((req, res, next) => {
   if (req.path.startsWith('/api/menu') || req.path.startsWith('/sitemap.xml')) return next();
   return generalLimiter(req, res, next);
 });
+
+app.use(previewRoutes);
 
 // Routes
 app.use("/api/auth", authRoutes);

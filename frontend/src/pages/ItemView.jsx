@@ -27,12 +27,24 @@ export function ItemView() {
       <main className="rg-detail-wrap">
         {item && (
           <SEO
-          title={item.name}
-          description={item.description}
-          image={item.image}
-          path={`/menu/${slug}/${itemId}`}
-          type="product"
-        />
+            title={item.name}
+            description={item.description}
+            image={item.image}
+            path={`/menu/${slug}/${itemId}`}
+            type="product"
+            jsonLd={{
+              "@context": "https://schema.org",
+              "@type": "MenuItem",
+              name: item.name,
+              description: item.description,
+              image: item.image,
+              offers: {
+                "@type": "Offer",
+                price: item.price,
+                priceCurrency: "EUR",
+              },
+            }}
+          />
         )}
 
         <Link to={cat ? `/menu/${cat.slug}` : "/"} className="rg-detail-back">

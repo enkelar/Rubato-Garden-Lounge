@@ -16,13 +16,34 @@ export function CategoryView() {
   return (
     <div className="rg-app">
       {cat && (
-        <SEO
-          title={cat.name}
-          description={cat.description}
-          image={cat.cover}
-          path={`/menu/${cat.slug}`}
-        />
-      )}
+         <SEO
+           title={cat.name}
+           description={cat.description}
+           image={cat.cover}
+           path={`/menu/${cat.slug}`}
+           jsonLd={{
+             "@context": "https://schema.org",
+             "@type": "ItemList",
+             name: cat.name,
+             itemListElement: (cat.items || []).map((item, i) => ({
+               "@type": "ListItem",
+               position: i + 1,
+               item: {
+                 "@type": "MenuItem",
+                 name: item.name,
+                 description: item.description,
+                 image: item.image,
+                 offers: {
+                   "@type": "Offer",
+                   price: item.price,
+                   priceCurrency: "EUR",
+                 },
+               },
+             })),
+           }}
+         />
+       )}
+
 
       <div className="rg-sticky">
         <div className="rg-sticky-inner">
