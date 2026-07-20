@@ -6,7 +6,6 @@ import categoryModel from '../models/categoryModel.js';
 
 let token;
 let categoryId;
-let productId;
 const { Admin } = userModel;
 
 beforeAll(async () => {
@@ -59,8 +58,23 @@ describe('Product admin CRUD', () => {
     expect(res.status).toBe(201);
     expect(res.body.message).toBe('Product created');
     expect(res.body.product.name).toBe('Chocolate Cake');
-    productId = res.body.product._id;
   });
+
+  it('returns 404 when updating a product that does not exist', async () => {
+  const fakeId = '64b000000000000000000099';
+
+  const res = await request(app)
+    .put(`/api/products/${fakeId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      name: 'Ghost Product',
+      price: 20,
+      category: categoryId,      
+      image: 'https://example.com/ghost.jpg',
+    });
+
+  expect(res.status).toBe(404);
+});
 
   it('lists products', async () => {
     await productModel.create({

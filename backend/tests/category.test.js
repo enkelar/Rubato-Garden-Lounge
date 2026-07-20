@@ -3,7 +3,6 @@ import request from 'supertest';
 import app from '../app.js';
 import { connectTestDB, closeTestDB } from './testDb.js';
 import userModel from '../models/userModel.js';
-import jwt from 'jsonwebtoken';
 
 let token;
 const { Admin } = userModel;
