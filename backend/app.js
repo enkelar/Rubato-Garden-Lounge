@@ -12,6 +12,8 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import sitemapRoutes from "./routes/sitemapRoutes.js";
 import previewRoutes from "./routes/previewRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
+import pinoHttp from 'pino-http';
+import logger from './utils/logger.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -19,6 +21,7 @@ app.set('trust proxy', 1);
 // Security and middleware
 app.use(helmet()); // HTTP headers security
 app.use(compression()); // compresses responses (gzip), reduce bandwidth, speedup
+app.use(pinoHttp({ logger }));
 app.use(express.json({limit: '100kb'})); // clients can't send huge JSON payloads
 
 const allowedOrigins = (process.env.FRONTEND_URL || "").split(",").map(s => s.trim()).filter(Boolean);
@@ -56,6 +59,16 @@ app.use("/sitemap.xml", sitemapRoutes);
 // Health check
 app.get("/", (req, res) => {
   res.json({ message: "Rubato API is running..." });
+});
+
+app.get("/health", async (req, res) => {
+  const dbState = mongoose.connection.readyState; // 1 = connected
+  const healthy = dbState === 1;
+  res.status(healthy ? 200 : 503).json({
+    status: healthy ? "ok" : "degraded",
+    db: ["disconnected", "connected", "connecting", "disconnecting"][dbState] || "unknown",
+    uptime: process.uptime(),
+  });
 });
 
 app.use(errorHandler);
