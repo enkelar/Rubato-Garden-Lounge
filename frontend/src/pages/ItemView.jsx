@@ -83,16 +83,6 @@ export function ItemView() {
               </div>
 
               <p className="rg-item-card-desc">{item.description}</p>
-
-              {item.details && (
-                <>
-                  <div className="rg-item-card-divider" />
-                  <div className="rg-item-card-meta">
-                    <div className="rg-item-card-meta-label">{t("item.details")}</div>
-                    <p className="rg-item-card-meta-text">{item.details}</p>
-                  </div>
-                </>
-              )}
             </div>
           </div>
         )}

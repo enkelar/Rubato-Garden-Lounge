@@ -14,8 +14,6 @@ const EMPTY = {
   image: "",
   description: "",
   descriptionSq: "",
-  details: "",
-  detailsSq: "",
 };
 
 // Product form component for admin (create/edit)
@@ -33,8 +31,6 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
         image: initial.image || "",
         description: initial.description || "",
         descriptionSq: initial.descriptionSq || "",
-        details: initial.details || "",
-        detailsSq: initial.detailsSq || "",
       }
     : { ...EMPTY, category: categories[0]?._id || "" }
 );
@@ -128,21 +124,6 @@ export function AdminProductForm({ initial, categories, onDone, onCancel }) {
         />
       </label>
 
-      <label className="rg-field">
-        <span className="rg-field-form-label">{t("form.details")}</span>
-        <textarea className="rg-input rg-textarea" rows={2} value={form.details} onChange={(e) => set("details", e.target.value)} />
-      </label>
-
-      <label className="rg-field">
-        <span className="rg-field-form-label rg-field-label-sq">{t("form.details")} (SQ)</span>
-        <textarea
-          className="rg-input rg-textarea rg-input-sq"
-          rows={2}
-          placeholder="Detaje në shqip (opsionale)"
-          value={form.detailsSq}
-          onChange={(e) => set("detailsSq", e.target.value)}
-        />
-      </label>
 
       {(error ) && <p className="rg-auth-error">{error}</p>}
 

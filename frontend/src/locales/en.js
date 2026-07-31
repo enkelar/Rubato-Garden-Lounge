@@ -16,7 +16,6 @@ export default {
   "item.notFound": "Product not found.",
   "item.error": "Failed to load product:",
   "item.contains": "What it contains",
-  "item.details": "Details",
   "item.backTo": "Back to",
   "item.menu": "Menu",
 
@@ -80,7 +79,6 @@ export default {
   "form.price": "Price (€)",
   "form.photo": "Photo",
   "form.description": "Description",
-  "form.details": "Details",
   "form.cancel": "Cancel",
   "form.saving": "Saving…",
   "form.saveChanges": "Save changes",

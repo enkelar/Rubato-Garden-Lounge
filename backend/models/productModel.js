@@ -7,8 +7,6 @@ const productSchema = new mongoose.Schema({
     descriptionSq: { type: String, default: 'Nuk u dha përshkrim.' },
     price: { type: Number, required: true },
     image: { type: String, required: false, default: '/product-placeholder.svg' },
-    details: { type: String, default: 'No additional details provided.' },
-    detailsSq: { type: String, default: 'Nuk u dhanë detaje shtesë.' },
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',

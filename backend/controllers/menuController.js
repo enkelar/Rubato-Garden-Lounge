@@ -113,7 +113,6 @@ export const getProductById = asyncHandler(async (req, res) => {
         description: pick(product.description, product.descriptionSq, lang),
         price: product.price,
         image: product.image,
-        details: pick(product.details, product.detailsSq, lang),
       },
     },
   });

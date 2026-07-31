@@ -16,7 +16,6 @@ export default {
   "item.notFound": "Produkti nuk u gjet.",
   "item.error": "Dështoi ngarkimi i produktit:",
   "item.contains": "Çfarë përmban",
-  "item.details": "Detaje",
   "item.backTo": "Kthehu te",
   "item.menu": "Menyja",
 
@@ -80,7 +79,6 @@ export default {
   "form.price": "Çmimi (€)",
   "form.photo": "Foto",
   "form.description": "Përshkrimi",
-  "form.details": "Detaje",
   "form.cancel": "Anulo",
   "form.saving": "Duke ruajtur…",
   "form.saveChanges": "Ruaj ndryshimet",
