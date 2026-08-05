@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAdminApi } from "../services/adminApi";
 
-// Shared upload flow: get presigned URL -> PUT to R2 -> return public URL
 export function useImageUpload() {
   const api = useAdminApi();
   const [uploading, setUploading] = useState(false);
@@ -18,8 +17,11 @@ export function useImageUpload() {
         headers: { "Content-Type": file.type },
         body: file,
       });
-
       if (!putRes.ok) throw new Error("Image upload to storage failed.");
+
+      // Extract the R2 key from the public URL and verify the file signature
+      const key = new URL(uploadURL).pathname.replace(/^\/+/, "");
+      await api.verifyImageUpload(key, file.type);
 
       return publicUrl;
     } catch (err) {

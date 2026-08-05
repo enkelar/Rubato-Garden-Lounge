@@ -1,10 +1,6 @@
 import categoryModel from "../models/categoryModel.js";
 import productModel from "../models/productModel.js";
-
-const SITE_URL = process.env.SITE_URL || 'https://yourdomain.com';
-const SITE_NAME = "Rubato Garden Lounge";
-const DEFAULT_IMAGE = `${SITE_URL}/og-cover.jpg`;
-const DEFAULT_DESCRIPTION = "Rubato Garden Lounge — a garden lounge menu featuring soups, pasta, risotto, wood-fired pizza, and more.";
+import { SITE_URL, SITE_NAME, DEFAULT_IMAGE, DEFAULT_DESCRIPTION } from "../config/site.js";
 
 function escapeHtml(str = '') {
   return String(str)

@@ -38,5 +38,6 @@ export function useAdminApi() {
     updateProduct: (id, payload) => call(`/products/${id}`, { method: "PUT", body: JSON.stringify(payload) }),
     deleteProduct: (id) => call(`/products/${id}`, { method: "DELETE" }),
     getImageUploadUrl: (contentType, fileSize) => call("/uploads/image-url", { method: "POST", body: JSON.stringify({ contentType, fileSize }) }), 
+    verifyImageUpload: (key, contentType) => call("/uploads/verify", { method: "POST", body: JSON.stringify({ key, contentType }) }),
   };
 }

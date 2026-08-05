@@ -1,9 +1,9 @@
 import express from 'express';
 import categoryModel from '../models/categoryModel.js';
 import productModel from '../models/productModel.js';
+import { SITE_URL } from '../config/site.js';
 
 const router = express.Router();
-const SITE_URL = process.env.SITE_URL || 'https://yourdomain.com';
 
 router.get('/', async (req, res) => {
   try {
