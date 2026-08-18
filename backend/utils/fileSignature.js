@@ -16,6 +16,12 @@ export function isValidImageSignature(buffer, contentType) {
     return riff && webp;
   }
 
+  if (contentType === 'image/avif') {
+    const ftyp = buffer.slice(4, 8).toString('ascii') === 'ftyp';
+    const brand = buffer.slice(8, 12).toString('ascii');
+    return ftyp && (brand === 'avif' || brand === 'avis');
+  }
+
   const candidates = SIGNATURES[contentType];
   if (!candidates) return false;
   return candidates.some((sig) => matchesSignature(buffer, sig));

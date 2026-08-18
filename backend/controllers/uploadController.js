@@ -11,9 +11,10 @@ const ALLOWED_TYPES = {
   'image/png': 'png',
   'image/gif': 'gif',
   'image/webp': 'webp',
+  'image/avif': 'avif',
 };
 
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
 export const getImageUploadUrl = asyncHandler(async (req, res) => {
   if (!R2_BUCKET_NAME || !R2_PUBLIC_URL) {

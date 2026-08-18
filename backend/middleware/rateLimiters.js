@@ -31,3 +31,12 @@ export const adminWriteLimiter = rateLimit({
     legacyHeaders: false,
     handler: jsonRateLimitHandler,
 });
+
+// image uploads — each image costs 2 requests (presign + verify), so bulk
+export const uploadLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 150, // up to 75 images per window
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: jsonRateLimitHandler,
+});

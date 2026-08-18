@@ -4,7 +4,7 @@ import cache from "../utils/cache.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { httpError } from "../utils/httpError.js";
 
-const PUBLIC_CACHE_SECONDS = 300;
+const PUBLIC_CACHE_SECONDS = 30;
 
 function pick(base, sq, lang) {
   if (lang === 'sq' && sq) return sq;

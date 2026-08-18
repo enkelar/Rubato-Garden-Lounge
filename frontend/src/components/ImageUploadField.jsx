@@ -1,7 +1,7 @@
 import { useImageUpload } from "../hooks/useImageUpload";
 import "./ImageUploadField.css";
 
-export function ImageUploadField({ label, value, onChange, accept = "image/jpeg,image/png,image/webp,image/gif" }) {
+export function ImageUploadField({ label, value, onChange, accept = "image/jpeg,image/png,image/webp,image/gif,image/avif" }) {
   const { upload, uploading, error } = useImageUpload();
 
   async function handleFileChange(e) {
