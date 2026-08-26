@@ -12,6 +12,10 @@ export function CategoryView() {
     errorMessage: "Failed to fetch category",
   });
   const cat = data?.data || null;
+  const items = cat?.items || [];
+  const hasImages = items.some(
+    (item) => item.image && item.image !== "/product-placeholder.svg"
+  );
 
   return (
     <div className="rg-app">
@@ -63,33 +67,50 @@ export function CategoryView() {
         {error && (
           <div className="rg-error">{t("category.error")} {error}</div>
         )}
-        {loading && <div className="rg-loading">{t("category.loading")}</div>}
-        {!loading && !cat?.items && !error && <div>{t("category.empty")}</div>}
-        <div className="rg-list">
-          {cat?.items?.map((item, i) => (
-            <Link
-              key={item.id}
-              to={`/menu/${cat.slug}/${item.id}`}
-              className="rg-item"
-              style={{ animationDelay: `${i * 55}ms` }}
-            >
-              <img
-                 src={item.image || "/product-placeholder.svg"}
-                 alt={`${item.name} - ${item.description}`}
-                 className="rg-item-img"
-                 loading="lazy"
-                 onError={(e) => {
-                   e.target.onerror = null;
-                   e.target.src = "/product-placeholder.svg";
-                 }}
-                />
-              <div className="rg-item-body">
-                <h3 className="rg-item-name">{item.name}</h3>
-                <p className="rg-item-desc">{item.description}</p>
-                <div className="rg-item-price">{item.price} €</div>
-              </div>
-            </Link>
-          ))}
+                {!loading && !cat?.items && !error && <div>{t("category.empty")}</div>}
+        <div className={hasImages ? "rg-list" : "rg-list-noimg"}>
+          {hasImages
+            ? items.map((item, i) => (
+                <Link
+                  key={item.id}
+                  to={`/menu/${cat.slug}/${item.id}`}
+                  className="rg-item"
+                  style={{ animationDelay: `${i * 55}ms` }}
+                >
+                  <img
+                    src={item.image || "/product-placeholder.svg"}
+                    alt={`${item.name} - ${item.description}`}
+                    className="rg-item-img"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/product-placeholder.svg";
+                    }}
+                  />
+                  <div className="rg-item-body">
+                    <h3 className="rg-item-name">{item.name}</h3>
+                    <p className="rg-item-desc">{item.description}</p>
+                    <div className="rg-item-price">{item.price} €</div>
+                  </div>
+                </Link>
+              ))
+            : items.map((item, i) => (
+                <Link
+                  key={item.id}
+                  to={`/menu/${cat.slug}/${item.id}`}
+                  className="rg-item-noimg"
+                  style={{ animationDelay: `${i * 55}ms` }}
+                >
+                  <div className="rg-item-noimg-row">
+                    <span className="rg-item-noimg-name">{item.name}</span>
+                    <span className="rg-item-noimg-leader" aria-hidden="true" />
+                    <span className="rg-item-noimg-price">{item.price} €</span>
+                  </div>
+                  {item.description && (
+                    <p className="rg-item-noimg-desc">{item.description}</p>
+                  )}
+                </Link>
+              ))}
         </div>
         <Footer />
       </main>

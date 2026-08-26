@@ -167,3 +167,73 @@
 .rg-category-view {
   animation: rg-page-slide-in 0.35s ease both;
 }
+
+/* No-image variant — elegant wine-list style with dotted price leaders */
+.rg-list-noimg {
+  display: flex;
+  flex-direction: column;
+  padding-top: 12px;
+}
+
+.rg-item-noimg {
+  display: block;
+  padding: 16px 6px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+  text-decoration: none;
+  color: inherit;
+  opacity: 0;
+  animation: rg-item-in 0.45s ease both;
+  transition: transform 0.2s ease, padding-left 0.2s ease;
+}
+
+.rg-item-noimg:first-child {
+  border-top: 1px solid rgba(212, 175, 55, 0.16);
+}
+
+.rg-item-noimg:hover {
+  padding-left: 10px;
+}
+
+.rg-item-noimg:active {
+  transform: scale(0.99);
+}
+
+.rg-item-noimg-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.rg-item-noimg-name {
+  font-family: var(--rg-font-display);
+  font-size: 18.5px;
+  font-weight: 600;
+  color: var(--rg-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rg-item-noimg-leader {
+  flex: 1;
+  min-width: 16px;
+  border-bottom: 1px dotted rgba(245, 245, 245, 0.28);
+  transform: translateY(-5px);
+}
+
+.rg-item-noimg-price {
+  font-family: var(--rg-font-display);
+  font-style: italic;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--rg-accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.rg-item-noimg-desc {
+  font-size: 11.5px;
+  color: var(--rg-ink-soft);
+  margin: 5px 0 0;
+  line-height: 1.4;
+}
