@@ -76,7 +76,9 @@ export function CategoryView() {
             className="rg-sticky-title"
             key={cat ? cat.slug : "pending"}
           >
-            {cat ? cat.icon : ""} {cat ? cat.name : ""}
+            {/* {cat ? cat.icon : ""}  */}
+            &ensp;
+            {cat ? cat.name : ""}
           </div>
 
           {cat?.note && (
@@ -103,8 +105,9 @@ export function CategoryView() {
         {/* Empty category */}
         {!loading && !error && cat && items.length === 0 && (
           <div className="rg-empty">
-            {t("category.empty")}
-          </div>
+           <div className="rg-empty-icon">✦</div>
+             <p>{t("category.empty")}</p>
+           </div>
         )}
 
         {/* Products */}

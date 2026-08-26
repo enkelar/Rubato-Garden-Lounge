@@ -22,7 +22,7 @@
 
 .rg-back {
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: 16px;
   transform: translateY(-50%);
   background: var(--rg-bg);
@@ -38,6 +38,7 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
   z-index: 10;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  animation: rg-back-in 0.35s ease both;
 }
 
 .rg-back:hover {
@@ -239,43 +240,36 @@
 }
 
 .rg-empty {
-  min-height: 260px;
+  min-height: 280px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 40px 24px;
+  animation: rg-fade 0.4s ease both;
+}
+
+.rg-empty-icon {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--rg-accent);
+  font-size: 16px;
+  margin-bottom: 16px;
+  background: rgba(212, 175, 55, 0.04);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.rg-empty p {
+  max-width: 280px;
+  margin: 0;
   color: var(--rg-ink-soft);
   font-family: var(--rg-font-display);
   font-size: 20px;
   font-weight: 500;
-  line-height: 1.5;
-  position: relative;
-}
-
-.rg-empty::before {
-  content: "";
-  position: absolute;
-  top: 53%;
-  left: 50%;
-  width: 54px;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(212, 175, 55, 0.55),
-    transparent
-  );
-  transform: translate(-50%, -32px);
-}
-
-.rg-empty::after {
-  content: "✦";
-  position: absolute;
-  top: 55%;
-  left: 49.9%;
-  transform: translate(-50%, 4px);
-  color: var(--rg-accent);
-  font-size: 15px;
-  opacity: 0.8;
+  line-height: 1.6;
 }
