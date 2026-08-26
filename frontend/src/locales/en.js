@@ -70,7 +70,7 @@ export default {
   "categoryForm.createCategory": "Create category",
   "categoryForm.requiredError": "Name is required.",
   "categoryForm.order": "Display order",
-"categoryForm.orderHint": "Lower numbers show first. Leave blank to add to the end.",
+  "categoryForm.orderHint": "Lower numbers show first. Leave blank to add to the end.",
 
   // Product form
   "form.name": "Name",
