@@ -14,6 +14,7 @@ const EMPTY = {
   note: "",
   noteSq: "",
   order: "",
+  isNightMenu: false,
 };
 
 export function AdminCategoryForm({ initial, onDone, onCancel }) {
@@ -30,6 +31,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
         note: initial.note || "",
         noteSq: initial.noteSq || "",
         order: initial.order ?? "",
+        isNightMenu: initial.isNightMenu || false,
       }
     : { ...EMPTY }
 );
@@ -119,6 +121,16 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
           <span className="rg-field-hint">{t("categoryForm.orderHint")}</span>
         </label>
       </div>
+
+       {/* Night Menu check*/}
+      <label className="rg-field rg-checkbox-field">
+        <span className="rg-field-form-label">{t("categoryForm.nightMenu")}</span>
+        <input
+          type="checkbox"
+          checked={form.isNightMenu}
+          onChange={(e) => set("isNightMenu", e.target.checked)}
+        />
+      </label>
 
       {/* Cover image upload */}
       <ImageUploadField

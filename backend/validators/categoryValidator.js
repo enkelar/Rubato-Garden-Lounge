@@ -7,5 +7,6 @@ export const categorySchema = Joi.object({
   cover: Joi.string().uri().allow('', null),
   note: Joi.string().trim().max(200).allow('', null),
   noteSq: Joi.string().trim().max(200).allow('', null),
+  isNightMenu: Joi.boolean(),
   order: Joi.number().integer().min(0).allow(null),
 });

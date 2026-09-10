@@ -84,4 +84,15 @@ export default {
   "form.saveChanges": "Ruaj ndryshimet",
   "form.createProduct": "Krijo produktin",
   "form.requiredError": "Emri, kategoria dhe çmimi janë të detyrueshëm.",
+
+  "nightMenu.eyebrow": "Pas Errësirës",
+  "nightMenu.title": "Menyja e Natës",
+  "nightMenu.subtitle": "Shërbehet nga ora 19:00",
+  "nightMenu.openNow": "Hapur tani",
+  "nightMenu.viewButton": "Menyja e Natës",
+  "nightMenu.back": "Kthehu te Menyja",
+  "nightMenu.loading": "Duke ngarkuar menynë e natës...",
+  "nightMenu.error": "Dështoi ngarkimi i menysë së natës:",
+  "nightMenu.empty": "Nuk u gjetën kategori.",
+  "categoryForm.nightMenu": "Kategori e menysë së natës",
 };

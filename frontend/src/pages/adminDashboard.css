@@ -302,3 +302,9 @@
     font-size: 11px;
   }
 }
+
+.rg-night-tag {
+  margin-left: 6px;
+  font-size: 12px;
+  opacity: 0.85;
+}

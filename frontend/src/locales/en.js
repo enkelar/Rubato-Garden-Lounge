@@ -84,5 +84,16 @@ export default {
   "form.saveChanges": "Save changes",
   "form.createProduct": "Create product",
   "form.requiredError": "Name, category, and price are required.",
+
+  "nightMenu.eyebrow": "After Dark",
+  "nightMenu.title": "Night Menu",
+  "nightMenu.subtitle": "Serving from 7:00 PM",
+  "nightMenu.openNow": "Open now",
+  "nightMenu.viewButton": "Night Menu",
+  "nightMenu.back": "Back to Day Menu",
+  "nightMenu.loading": "Loading night menu...",
+  "nightMenu.error": "Failed to load night menu:",
+  "nightMenu.empty": "No night menu categories found.",
+  "categoryForm.nightMenu": "Night menu category",
 };
 

@@ -1,0 +1,21 @@
+.rg-night-app .rg-hero {
+  position: relative;
+  padding-top: 70px;
+}
+
+.rg-night-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(212, 175, 55, 0.35);
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.rg-night-back:hover {
+  border-color: var(--rg-accent);
+  color: var(--rg-accent);
+  transform: translateY(-1px);
+}

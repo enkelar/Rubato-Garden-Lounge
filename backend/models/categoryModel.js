@@ -9,6 +9,7 @@ const categorySchema = new mongoose.Schema({
   cover: { type: String, default: '/category-placeholder.svg' },
   note: { type: String },
   noteSq: { type: String },
+  isNightMenu: { type: Boolean, default: false },
   order: { type: Number, default: 0, index: true },
 });
 

@@ -309,6 +309,7 @@ export function AdminDashboard() {
                            />
                           <div className="rg-admin-product-name">
                             {c.icon} {localizedName(c)}
+                            {c.isNightMenu && <span className="rg-night-tag" title="Night menu">🌙</span>}
                           </div>
                         </div>
                       </td>

@@ -102,3 +102,56 @@
   border-radius: var(--rg-radius);
   overflow: hidden;
 }
+
+.rg-night-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  color: var(--rg-ink);
+  font-style: italic;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.6);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+  text-decoration-color:  var(--rg-accent);
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.rg-night-arrow {
+  transition: transform 0.2s ease;
+}
+
+.rg-night-link:hover .rg-night-arrow {
+  transform: translateX(3px);
+}
+
+.rg-night-link:hover {
+  color: var(--rg-ink);
+ border-color: var(--rg-accent);
+}
+
+.rg-night-link-active {
+  color: #142219;
+  font-style: normal;
+  font-size: 13px;
+  text-decoration: none;
+  border-bottom: none;
+  background: linear-gradient(135deg, var(--rg-brass) 0%, var(--rg-brass-2) 100%);
+  padding: 6px 16px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 4px 16px -4px rgba(228, 187, 133, 0.6);
+  animation: rg-night-glow 2.4s ease-in-out infinite;
+}
+
+.rg-night-link-active:hover {
+  color: #142219;
+  transform: translateY(-1px);
+}
+
+@keyframes rg-night-glow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 4px 16px -4px rgba(228, 187, 133, 0.6); }
+  50% { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) inset, 0 4px 22px -2px rgba(228, 187, 133, 0.9); }
+}

@@ -6,11 +6,12 @@ import { useFetch } from "../hooks/useFetch";
 import SEO from "../components/SEO";
 import "./Rubato.css";
 import "./Home.css";
+import "./NightMenu.css";
 
-export function HomeView() {
+export function NightMenuView() {
   const { language, t } = useLanguage();
-  const { data, error, loading } = useFetch(`/api/menu?lang=${language}`, {
-    errorMessage: "Failed to fetch categories",
+  const { data, error, loading } = useFetch(`/api/menu?lang=${language}&section=night`, {
+    errorMessage: "Failed to fetch night menu",
   });
   const categories = data?.categories || [];
 
@@ -22,40 +23,31 @@ export function HomeView() {
   }, []);
 
   return (
-    <div className="rg-app">
+    <div className="rg-app rg-night-app">
+      <SEO title={t("nightMenu.title")} path="/night-menu" />
+
       <header className="rg-hero">
-        <SEO
-          path="/"
-          jsonLd={{
-            "@context": "https://schema.org",
-            "@type": "Restaurant",
-            name: "Rubato Garden Lounge",
-            servesCuisine: "International",
-            url: "https://yourdomain.com",
-            image: "https://yourdomain.com/og-cover.jpg",
-          }}
-        />
-        <div className="rg-eyebrow">{t("home.eyebrow")}</div>
-        <h1 className="rg-title">Rubato</h1>
-        <div className="rg-subtitle">{t("home.subtitle")}</div>
+        <div className="rg-eyebrow">{t("nightMenu.eyebrow")}</div>
+        <h1 className="rg-title">{t("nightMenu.title")}</h1>
+        <div className="rg-subtitle">
+          {t("nightMenu.subtitle")}
+          {isNightOpen && (
+            <span className="rg-night-badge rg-night-badge-inline">
+            - {t("nightMenu.openNow")}
+            </span>
+          )}
+        </div>
         <div className="rg-divider">✦</div>
-        <Link
-          to="/night-menu"
-          className={isNightOpen ? "rg-night-link rg-night-link-active" : "rg-night-link"}
-        >
-          {t("nightMenu.viewButton")}
-          <svg className="rg-night-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
+        <Link to="/" className="rg-detail-back rg-night-back">
+           {t("nightMenu.back")}
         </Link>
       </header>
 
       <main className="rg-container">
-        {error && <div className="rg-error">{t("home.error")} {error}</div>}
-        {loading && <div className="rg-loading">{t("home.loading")}</div>}
+        {error && <div className="rg-error">{t("nightMenu.error")} {error}</div>}
+        {loading && <div className="rg-loading">{t("nightMenu.loading")}</div>}
         {!loading && categories.length === 0 && !error && (
-          <div>{t("home.empty")}</div>
+          <div>{t("nightMenu.empty")}</div>
         )}
         <div className="rg-grid">
           {categories.map((cat, i) => (
@@ -90,4 +82,4 @@ export function HomeView() {
   );
 }
 
-export default HomeView;
+export default NightMenuView;

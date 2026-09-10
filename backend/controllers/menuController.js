@@ -15,9 +15,14 @@ function getLang(req) {
   return req.query.lang === 'sq' ? 'sq' : 'en';
 }
 
+function getSection(req) {
+  return req.query.section === 'night' ? 'night' : 'day';
+}
+
 export const getMenuData = asyncHandler(async (req, res) => {
   const lang = getLang(req);
-  const cacheKey = `menu:${lang}`;
+  const section = getSection(req);
+  const cacheKey = `menu:${lang}:${section}`;
   const cached = cache.get(cacheKey);
 
   if (cached) {
@@ -25,7 +30,7 @@ export const getMenuData = asyncHandler(async (req, res) => {
     return res.status(200).json(cached);
   }
 
-  const categories = await categoryModel.find().sort({ order: 1, name: 1 });
+  const categories = await categoryModel.find(section === 'night' ? { isNightMenu: true } : { isNightMenu: { $ne: true } }).sort({ order: 1, name: 1 });
 
   const localized = categories.map(cat => ({
     _id: cat._id,
@@ -75,6 +80,7 @@ export const getProductsByCategory = asyncHandler(async (req, res) => {
       icon: category.icon,
       cover: category.cover,
       note: pick(category.note, category.noteSq, lang),
+      isNightMenu: category.isNightMenu,
       items,
     },
   };

@@ -57,7 +57,7 @@ export function CategoryView() {
 
       <div className="rg-sticky">
         <div className="rg-sticky-inner">
-          <Link to="/" className="rg-back" aria-label="Back">
+          <Link to={cat?.isNightMenu ? "/night-menu" : "/"} className="rg-back" aria-label="Back">
             <svg
               width="18"
               height="18"
