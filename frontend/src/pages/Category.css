@@ -112,7 +112,7 @@
   height: 76px;
   object-fit: cover;
   border-radius: 11px;
-  background: var(--rg-bg);
+  background: linear-gradient(135deg, #273c2f 0%, #1c2d21 100%);
 }
 
 .rg-item-body {

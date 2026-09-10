@@ -46,6 +46,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  background: linear-gradient(135deg, #273c2f 0%, #1c2d21 100%);
 }
 
 .rg-item-card-media-fallback {
