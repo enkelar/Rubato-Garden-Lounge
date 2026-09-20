@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
     ...(mode === 'test' ? [] : [babel({ presets: [reactCompilerPreset()] })]),
   ],
   server: {
+    allowedHosts: true,
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
