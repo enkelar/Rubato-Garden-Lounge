@@ -142,7 +142,7 @@ export function CategoryView() {
                       </p>
 
                       <div className="rg-item-price">
-                        {item.price} €
+                        {Number(item.price).toFixed(2)}€
                       </div>
                     </div>
                   </Link>
@@ -165,7 +165,7 @@ export function CategoryView() {
                       />
 
                       <span className="rg-item-noimg-price">
-                        {item.price} €
+                        {Number(item.price).toFixed(2)} €
                       </span>
                     </div>
 

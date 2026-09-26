@@ -225,8 +225,8 @@
 .rg-item-noimg-price {
   font-family: var(--rg-font-display);
   font-style: italic;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 21px;
+  font-weight: 750;
   color: var(--rg-accent);
   white-space: nowrap;
   flex-shrink: 0;

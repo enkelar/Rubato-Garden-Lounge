@@ -39,7 +39,7 @@ export function Footer() {
             <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
           </svg>
         </a>
-        <a className="rg-social" href="https://facebook.com/rubatogardenlounge" target="_blank" rel="noreferrer" aria-label="Facebook">
+        <a className="rg-social" href="https://www.facebook.com/share/1F6ncwRXfN/?mibextid=wwXIfr" target="_blank" rel="noreferrer" aria-label="Facebook">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M13 22v-8h2.6l.4-3H13V9c0-.9.2-1.5 1.5-1.5H16V5c-.3 0-1.2-.1-2.2-.1-2.2 0-3.8 1.3-3.8 3.8V11H7.5v3H10v8h3z" />
           </svg>
