@@ -18,6 +18,13 @@ import logger from './utils/logger.js';
 const app = express();
 app.set('trust proxy', 1);
 
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.secure) return next();
+    return res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
+  });
+}
+
 // Security and middleware
 app.use(helmet()); // HTTP headers security
 app.use(compression()); // compresses responses (gzip), reduce bandwidth, speedup
