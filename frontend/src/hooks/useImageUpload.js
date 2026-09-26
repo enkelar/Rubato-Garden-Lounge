@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useAdminApi } from "../services/adminApi";
+import { compressImage } from "../utils/compressImage";
+
 
 export function useImageUpload() {
   const api = useAdminApi();
@@ -10,12 +12,13 @@ export function useImageUpload() {
     setError(null);
     setUploading(true);
     try {
-      const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type, file.size);
+      const compressed = await compressImage(file); 
+      const { uploadURL, publicUrl } = await api.getImageUploadUrl(compressed.type, compressed.size);
 
       const putRes = await fetch(uploadURL, {
         method: "PUT",
         headers: { "Content-Type": file.type },
-        body: file,
+        body: compressed,
       });
       if (!putRes.ok) throw new Error("Image upload to storage failed.");
 
