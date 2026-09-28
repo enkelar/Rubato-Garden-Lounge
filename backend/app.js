@@ -31,7 +31,11 @@ app.use(compression()); // compresses responses (gzip), reduce bandwidth, speedu
 app.use(pinoHttp({ logger }));
 app.use(express.json({limit: '100kb'})); // clients can't send huge JSON payloads
 
-const allowedOrigins = (process.env.FRONTEND_URL || "").split(",").map(s => s.trim()).filter(Boolean);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://rubatogardenlounge.com",
+  "https://www.rubatogardenlounge.com"
+];
 
 app.use(cors({
   origin: allowedOrigins.length ? allowedOrigins : false,
