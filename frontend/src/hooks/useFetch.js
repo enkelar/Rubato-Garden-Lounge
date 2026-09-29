@@ -1,24 +1,95 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-// Module-level cache — survives component remounts. Cleared on full page reload.
 const cacheStore = new Map();
-const DEFAULT_TTL_MS = 60 * 1000;
-const MAX_CACHE_ENTRIES = 50;
+const requestStore = new Map();
+
+const DEFAULT_TTL_MS = 5 * 60 * 1000;
+const MAX_CACHE_ENTRIES = 100;
 
 function setCacheEntry(key, value) {
   if (cacheStore.size >= MAX_CACHE_ENTRIES && !cacheStore.has(key)) {
     const oldestKey = cacheStore.keys().next().value;
     cacheStore.delete(oldestKey);
   }
+
   cacheStore.set(key, value);
 }
 
-export function useFetch(url, options = {}) {
-  const { errorMessage = "Request failed", ttl = DEFAULT_TTL_MS } = options;
+function getFreshCache(url, ttl) {
+  const cached = cacheStore.get(url);
 
-  const [data, setData] = useState(null);
+  if (!cached) return null;
+
+  if (Date.now() - cached.timestamp >= ttl) {
+    cacheStore.delete(url);
+    return null;
+  }
+
+  return cached.data;
+}
+
+export function prefetch(url, options = {}) {
+  if (!url || cacheStore.has(url) || requestStore.has(url)) {
+    return requestStore.get(url);
+  }
+
+  const {
+    ttl = DEFAULT_TTL_MS,
+    errorMessage = "Request failed",
+  } = options;
+
+  const controller = new AbortController();
+
+  const request = fetch(url, {
+    signal: controller.signal,
+    headers: {
+      Accept: "application/json",
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(errorMessage);
+      }
+
+      return response.json();
+    })
+    .then((json) => {
+      setCacheEntry(url, {
+        data: json,
+        timestamp: Date.now(),
+        ttl,
+      });
+
+      return json;
+    })
+    .finally(() => {
+      requestStore.delete(url);
+    });
+
+  requestStore.set(url, request);
+
+  return request;
+}
+
+export function clearFetchCache(prefix = "") {
+  for (const key of cacheStore.keys()) {
+    if (!prefix || key.startsWith(prefix)) {
+      cacheStore.delete(key);
+    }
+  }
+}
+
+export function useFetch(url, options = {}) {
+  const {
+    errorMessage = "Request failed",
+    ttl = DEFAULT_TTL_MS,
+  } = options;
+
+  const [data, setData] = useState(() => getFreshCache(url, ttl));
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(Boolean(url));
+  const [loading, setLoading] = useState(
+    Boolean(url && !getFreshCache(url, ttl))
+  );
 
   useEffect(() => {
     if (!url) {
@@ -26,33 +97,26 @@ export function useFetch(url, options = {}) {
       setData(null);
       setError(null);
       setLoading(false);
-      return;
+      return undefined;
     }
 
-    const cached = cacheStore.get(url);
-    const isFresh = cached && Date.now() - cached.timestamp < ttl;
+    const cachedData = getFreshCache(url, ttl);
 
-    if (isFresh) {
-      setData(cached.data);
+    if (cachedData) {
+      setData(cachedData);
       setError(null);
       setLoading(false);
-      return;
+      return undefined;
     }
 
-    const controller = new AbortController();
     let cancelled = false;
 
     setLoading(true);
     setError(null);
 
-    fetch(url, { signal: controller.signal })
-      .then((res) => {
-        if (!res.ok) throw new Error(errorMessage);
-        return res.json();
-      })
+    prefetch(url, { ttl, errorMessage })
       .then((json) => {
         if (!cancelled) {
-          setCacheEntry(url, { data: json, timestamp: Date.now() });
           setData(json);
         }
       })
@@ -63,16 +127,21 @@ export function useFetch(url, options = {}) {
         }
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       });
 
     return () => {
       cancelled = true;
-      controller.abort();
     };
-  }, [url, errorMessage, ttl]);
+  }, [url, ttl, errorMessage]);
 
-  return { data, error, loading };
+  return {
+    data,
+    error,
+    loading,
+  };
 }
 
 export default useFetch;

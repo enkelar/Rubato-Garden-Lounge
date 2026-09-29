@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
-import { useFetch } from "../hooks/useFetch";
+import { useFetch, prefetch } from "../hooks/useFetch";
 import SEO from "../components/SEO";
 import { SITE_URL } from "../config/site";
 import "./Rubato.css";
 import "./Home.css";
+
+function getCategoryProductsUrl(slug, language) {
+  return `/api/menu/${encodeURIComponent(slug)}?lang=${language}`;
+}
 
 export function HomeView() {
   const { language, t } = useLanguage();
@@ -72,33 +76,53 @@ export function HomeView() {
           <div>{t("home.empty")}</div>
         )}
         <div className="rg-grid">
-          {categories.map((cat, i) => (
-            <Link
-              key={cat.slug}
-              to={`/menu/${cat.slug}`}
-              className="rg-card"
-              style={{ animationDelay: `${i * 60}ms` }}
-            >
-              <img
-                src={cat.cover || "/category-placeholder.svg"}
-                alt={`${cat.name} category`}
-                className="rg-card-img"
-                loading={i < 6 ? "eager" : "lazy"}
-                fetchPriority={i < 4 ? "high" : undefined}
-                decoding="async"  
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/category-placeholder.svg";
-                }}
-              />
-              <div className="rg-card-overlay" />
-              <div className="rg-card-shine" />
-              <div className="rg-card-content">
-                <div className="rg-card-name">{cat.name}</div>
-                {cat.note && <div className="rg-card-note">{cat.note}</div>}
-              </div>
-            </Link>
-          ))}
+          {categories.map((cat, i) => {
+              const productUrl = getCategoryProductsUrl(cat.slug, language);
+            
+              const prefetchCategory = () => {
+                prefetch(productUrl, {
+                  ttl: 5 * 60 * 1000,
+                  errorMessage: "Failed to fetch category",
+                });
+              };
+            
+              return (
+                <Link
+                  key={cat.slug}
+                  to={`/menu/${cat.slug}`}
+                  className="rg-card"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                  onMouseEnter={prefetchCategory}
+                  onFocus={prefetchCategory}
+                  onTouchStart={prefetchCategory}
+                >
+                  <img
+                    src={cat.cover || "/category-placeholder.svg"}
+                    alt={`${cat.name} category`}
+                    className="rg-card-img"
+                    width="800"
+                    height="600"
+                    loading={i < 4 ? "eager" : "lazy"}
+                    fetchPriority={i === 0 ? "high" : "auto"}
+                    decoding="async"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = "/category-placeholder.svg";
+                    }}
+                  />
+
+                 <div className="rg-card-overlay" />
+                  <div className="rg-card-shine" />
+            
+                  <div className="rg-card-content">
+                    <div className="rg-card-name">{cat.name}</div>
+                    {cat.note && (
+                      <div className="rg-card-note">{cat.note}</div>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
         </div>
       </main>
       <Footer />
