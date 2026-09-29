@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
@@ -17,7 +17,36 @@ export function HomeView() {
   const { data, error, loading } = useFetch(`/api/menu?lang=${language}`, {
     errorMessage: "Failed to fetch categories",
   });
-  const categories = data?.categories || [];
+
+  const categories = useMemo(() => data?.categories || [], [data?.categories]);
+  
+  useEffect(() => {
+  if (!categories.length) return;
+
+  const firstCategory = categories[0];
+
+  const runPrefetch = () => {
+    prefetch(
+      `/api/menu/${encodeURIComponent(firstCategory.slug)}?lang=${language}`,
+      {
+        ttl: 5 * 60 * 1000,
+        errorMessage: "Failed to fetch category",
+      }
+    );
+  };
+
+  if ("requestIdleCallback" in window) {
+    const idleId = window.requestIdleCallback(runPrefetch, {
+      timeout: 1500,
+    });
+
+    return () => window.cancelIdleCallback(idleId);
+  }
+
+  const timeoutId = window.setTimeout(runPrefetch, 400);
+
+  return () => window.clearTimeout(timeoutId);
+  }, [categories, language]);
 
   const [isNightOpen, setIsNightOpen] = useState(() => new Date().getHours() >= 19);
   useEffect(() => {
