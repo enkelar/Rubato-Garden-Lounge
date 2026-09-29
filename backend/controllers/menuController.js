@@ -25,27 +25,40 @@ export const getMenuData = asyncHandler(async (req, res) => {
   const cacheKey = `menu:${lang}:${section}`;
   const cached = cache.get(cacheKey);
 
+  res.set(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=300, stale-while-revalidate=86400"
+  );
+
   if (cached) {
-    res.set('Cache-Control', `public, max-age=${PUBLIC_CACHE_SECONDS}`);
     return res.status(200).json(cached);
   }
 
-  const categories = await categoryModel.find(section === 'night' ? { isNightMenu: true } : { isNightMenu: { $ne: true } }).sort({ order: 1, name: 1 });
+  const filter =
+    section === "night"
+      ? { isNightMenu: true }
+      : { isNightMenu: { $ne: true } };
 
-  const localized = categories.map(cat => ({
-    _id: cat._id,
-    slug: cat.slug,
-    name: pick(cat.name, cat.nameSq, lang),
-    icon: cat.icon,
-    cover: cat.cover,
-    note: pick(cat.note, cat.noteSq, lang),
-  }));
+  const categories = await categoryModel
+    .find(filter)
+    .select("_id slug name nameSq icon cover note noteSq order")
+    .sort({ order: 1, name: 1 })
+    .lean();
 
-  const payload = { categories: localized };
+  const payload = {
+    categories: categories.map((category) => ({
+      _id: category._id,
+      slug: category.slug,
+      name: pick(category.name, category.nameSq, lang),
+      icon: category.icon,
+      cover: category.cover,
+      note: pick(category.note, category.noteSq, lang),
+    })),
+  };
 
-  cache.set(cacheKey, payload);
-  res.set('Cache-Control', `public, max-age=${PUBLIC_CACHE_SECONDS}`);
-  res.status(200).json(payload);
+  cache.set(cacheKey, payload, 300);
+
+  return res.status(200).json(payload);
 });
 
 export const getProductsByCategory = asyncHandler(async (req, res) => {
