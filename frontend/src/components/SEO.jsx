@@ -1,7 +1,6 @@
 import { Helmet } from "react-helmet-async";
+import { SITE_URL, SITE_NAME } from "../config/site";
 
-const SITE_NAME = "Rubato Garden Lounge";
-const SITE_URL = import.meta.env.VITE_SITE_URL || "https://yourdomain.com";
 const DEFAULT_IMAGE = `${SITE_URL}/og-cover.jpg`;
 const DEFAULT_DESCRIPTION =
   "Rubato Garden Lounge — a garden lounge menu featuring soups, pasta, risotto, wood-fired pizza, and more.";

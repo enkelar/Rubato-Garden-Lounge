@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
 import { useFetch } from "../hooks/useFetch";
 import SEO from "../components/SEO";
+import { SITE_URL } from "../config/site";
 import "./Rubato.css";
 import "./Home.css";
 
@@ -27,13 +28,20 @@ export function HomeView() {
         <SEO
           path="/"
           jsonLd={{
-            "@context": "https://schema.org",
-            "@type": "Restaurant",
-            name: "Rubato Garden Lounge",
-            servesCuisine: "International",
-            url: "https://yourdomain.com",
-            image: "https://yourdomain.com/og-cover.jpg",
-          }}
+           "@context": "https://schema.org",
+           "@type": "Restaurant",
+           name: "Rubato Garden Lounge",
+           servesCuisine: "International",
+           url: SITE_URL,
+           image: `${SITE_URL}/og-cover.jpg`,
+           address: {
+             "@type": "PostalAddress",
+             streetAddress: "18 Hyzri Talla",
+             addressLocality: "Prishtinë",
+             addressCountry: "XK",
+           },
+           telephone: "+38343508502",
+         }}
         />
         <div className="rg-eyebrow">{t("home.eyebrow")}</div>
         <h1 className="rg-title">Rubato</h1>
