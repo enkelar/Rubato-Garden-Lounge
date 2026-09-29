@@ -4,6 +4,10 @@ import cache from "../utils/cache.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { httpError } from "../utils/httpError.js";
 
+const CACHE_TTL = 3600; // seconds; cache is flushed on every admin write anyway
+const CACHE_CONTROL =
+  "public, max-age=60, s-maxage=300, stale-while-revalidate=86400";
+
 function pick(base, sq, lang) {
   if (lang === 'sq' && sq) return sq;
   return base;
@@ -17,21 +21,7 @@ function getSection(req) {
   return req.query.section === 'night' ? 'night' : 'day';
 }
 
-export const getMenuData = asyncHandler(async (req, res) => {
-  const lang = getLang(req);
-  const section = getSection(req);
-  const cacheKey = `menu:${lang}:${section}`;
-  const cached = cache.get(cacheKey);
-
-  res.set(
-    "Cache-Control",
-    "public, max-age=60, s-maxage=300, stale-while-revalidate=86400"
-  );
-
-  if (cached) {
-    return res.status(200).json(cached);
-  }
-
+async function buildMenuPayload(lang, section) {
   const filter =
     section === "night"
       ? { isNightMenu: true }
@@ -43,7 +33,7 @@ export const getMenuData = asyncHandler(async (req, res) => {
     .sort({ order: 1, name: 1 })
     .lean();
 
-  const payload = {
+  return {
     categories: categories.map((category) => ({
       _id: category._id,
       slug: category.slug,
@@ -53,8 +43,33 @@ export const getMenuData = asyncHandler(async (req, res) => {
       note: pick(category.note, category.noteSq, lang),
     })),
   };
+}
 
-  cache.set(cacheKey, payload, 300);
+// Pre-fills the category lists so the first visitor never pays for the DB query.
+// Call on server start and after every cache.flushAll().
+export async function warmMenuCache() {
+  for (const lang of ["en", "sq"]) {
+    for (const section of ["day", "night"]) {
+      const payload = await buildMenuPayload(lang, section);
+      cache.set(`menu:${lang}:${section}`, payload, CACHE_TTL);
+    }
+  }
+}
+
+export const getMenuData = asyncHandler(async (req, res) => {
+  const lang = getLang(req);
+  const section = getSection(req);
+  const cacheKey = `menu:${lang}:${section}`;
+  const cached = cache.get(cacheKey);
+
+  res.set("Cache-Control", CACHE_CONTROL);
+
+  if (cached) {
+    return res.status(200).json(cached);
+  }
+
+  const payload = await buildMenuPayload(lang, section);
+  cache.set(cacheKey, payload, CACHE_TTL);
 
   return res.status(200).json(payload);
 });
@@ -65,10 +80,7 @@ export const getProductsByCategory = asyncHandler(async (req, res) => {
   const cacheKey = `menu:${slug}:${lang}`;
   const cached = cache.get(cacheKey);
 
-  res.set(
-    "Cache-Control",
-    "public, max-age=60, s-maxage=300, stale-while-revalidate=86400"
-  );
+  res.set("Cache-Control", CACHE_CONTROL);
 
   if (cached) {
     return res.status(200).json(cached);
@@ -112,7 +124,7 @@ export const getProductsByCategory = asyncHandler(async (req, res) => {
     },
   };
 
-  cache.set(cacheKey, payload, 300);
+  cache.set(cacheKey, payload, CACHE_TTL);
 
   return res.status(200).json(payload);
 });
@@ -123,10 +135,7 @@ export const getProductById = asyncHandler(async (req, res) => {
   const cacheKey = `item:${slug}:${productId}:${lang}`;
   const cached = cache.get(cacheKey);
 
-  res.set(
-    "Cache-Control",
-    "public, max-age=60, s-maxage=300, stale-while-revalidate=86400"
-  );
+  res.set("Cache-Control", CACHE_CONTROL);
 
   if (cached) {
     return res.status(200).json(cached);
@@ -175,7 +184,7 @@ export const getProductById = asyncHandler(async (req, res) => {
     },
   };
 
-  cache.set(cacheKey, payload, 300);
+  cache.set(cacheKey, payload, CACHE_TTL);
 
   return res.json(payload);
 });

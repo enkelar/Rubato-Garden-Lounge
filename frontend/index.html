@@ -9,19 +9,22 @@
     <link rel="canonical" href="%VITE_SITE_URL%/" />
     
     <script>
-      (function () {
-        try {
-          if (location.pathname !== '/') return;
-          var lang = localStorage.getItem('rg_lang') === 'sq' ? 'sq' : 'en';
-          var l = document.createElement('link');
-          l.rel = 'preload';
-          l.as = 'fetch';
-          l.crossOrigin = 'anonymous';
-          l.href = '/api/menu?lang=' + lang;
-          document.head.appendChild(l);
-        } catch (e) {}
-      })();
-    </script>
+  (function () {
+    try {
+      if (location.pathname !== '/') return;
+      var lang = localStorage.getItem('rg_lang') === 'sq' ? 'sq' : 'en';
+      var url = '/api/menu?lang=' + lang;
+      var p = fetch(url, { headers: { Accept: 'application/json' } })
+        .then(function (r) { if (!r.ok) throw new Error('fail'); return r.json(); });
+      window.__RG_EARLY__ = { url: url, promise: p };
+      p.then(function (json) {
+        (json.categories || []).slice(0, 8).forEach(function (c) {
+          if (c.cover) new Image().src = c.cover;
+        });
+      }).catch(function () {});
+    } catch (e) {}
+  })();
+</script>
 
     <link rel="preconnect" href="https://pub-41d32df0ab11471f957f058c79605408.r2.dev">
     <link rel="preconnect" href="https://fonts.googleapis.com">
