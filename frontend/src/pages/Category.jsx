@@ -180,6 +180,7 @@ export function CategoryView() {
         )}
 
       </main>
+      
       <Footer />
     </div>
   );
