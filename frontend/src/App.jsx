@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import RequireAuth from './components/RequireAuth';
 import HomeView from './pages/Home';
 import CategoryView from './pages/Category';
@@ -11,6 +12,8 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 function App() {
   return (
+    <>
+    <ScrollToTop />
     <Routes>
       <Route path="/" element={<HomeView />} />
       <Route path="/night-menu" element={<NightMenuView />} />
@@ -23,7 +26,7 @@ function App() {
             <AdminAuth />
           </Suspense>
         }
-      />
+        />
       <Route
         path="/admin"
         element={
@@ -33,9 +36,9 @@ function App() {
             </Suspense>
           </RequireAuth>
         }
-      />
-
+        />
     </Routes>
+    </>
   );
 }
 
