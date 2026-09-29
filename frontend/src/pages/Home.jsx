@@ -83,8 +83,8 @@ export function HomeView() {
                 src={cat.cover || "/category-placeholder.svg"}
                 alt={`${cat.name} category`}
                 className="rg-card-img"
-                loading={i < 4 ? "eager" : "lazy"}
-                fetchPriority={i === 0 ? "high" : undefined}
+                loading={i < 6 ? "eager" : "lazy"}
+                fetchPriority={i < 4 ? "high" : undefined}
                 decoding="async"  
                 onError={(e) => {
                   e.target.onerror = null;

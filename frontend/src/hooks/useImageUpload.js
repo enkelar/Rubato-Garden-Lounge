@@ -6,14 +6,14 @@ const WEBP_QUALITY = 0.82;
 const SKIP_BELOW_BYTES = 80 * 1024; // already small, leave it alone
 
 // Resize + convert to WebP. Falls back to the original file if anything fails.
-async function compressImage(file) {
+async function compressImage(file, maxDimension = MAX_DIMENSION) {
   // GIFs may be animated; canvas would flatten them
   if (file.type === "image/gif") return file;
   if (file.size < SKIP_BELOW_BYTES && file.type === "image/webp") return file;
 
   try {
     const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
+    const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
     const width = Math.round(bitmap.width * scale);
     const height = Math.round(bitmap.height * scale);
 
@@ -43,11 +43,11 @@ export function useImageUpload() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function upload(originalFile) {
+  async function upload(originalFile, { maxDimension } = {}) {
     setError(null);
     setUploading(true);
     try {
-      const file = await compressImage(originalFile);
+      const file = await compressImage(originalFile, maxDimension);
 
       const { uploadURL, publicUrl } = await api.getImageUploadUrl(file.type, file.size);
 

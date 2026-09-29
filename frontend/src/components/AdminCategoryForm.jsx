@@ -135,6 +135,7 @@ export function AdminCategoryForm({ initial, onDone, onCancel }) {
       {/* Cover image upload */}
       <ImageUploadField
         label={t("categoryForm.cover")}
+        maxDimension={720}
         value={form.cover}
         onChange={(url) => set("cover", url)}
       />

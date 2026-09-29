@@ -1,14 +1,14 @@
 import { useImageUpload } from "../hooks/useImageUpload";
 import "./ImageUploadField.css";
 
-export function ImageUploadField({ label, value, onChange, accept = "image/jpeg,image/png,image/webp,image/gif,image/avif" }) {
+export function ImageUploadField({ label, value, onChange, maxDimension, accept = "image/jpeg,image/png,image/webp,image/gif,image/avif" }) {
   const { upload, uploading, error } = useImageUpload();
 
   async function handleFileChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      const publicUrl = await upload(file);
+      const publicUrl = await upload(file, { maxDimension });
       onChange(publicUrl);
     } catch {
       // error surfaced below via `error`

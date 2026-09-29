@@ -8,6 +8,21 @@
     <meta name="description" content="Rubato Garden Lounge, a menu featuring soups, pasta, risotto, pizza, and more. View our full menu online." />
     <link rel="canonical" href="%VITE_SITE_URL%/" />
     
+    <script>
+      (function () {
+        try {
+          if (location.pathname !== '/') return;
+          var lang = localStorage.getItem('rg_lang') === 'sq' ? 'sq' : 'en';
+          var l = document.createElement('link');
+          l.rel = 'preload';
+          l.as = 'fetch';
+          l.crossOrigin = 'anonymous';
+          l.href = '/api/menu?lang=' + lang;
+          document.head.appendChild(l);
+        } catch (e) {}
+      })();
+    </script>
+
     <link rel="preconnect" href="https://pub-41d32df0ab11471f957f058c79605408.r2.dev">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
