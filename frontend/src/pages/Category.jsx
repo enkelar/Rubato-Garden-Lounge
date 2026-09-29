@@ -179,8 +179,8 @@ export function CategoryView() {
           </div>
         )}
 
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }
