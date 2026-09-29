@@ -1,23 +1,27 @@
 .rg-footer {
-  margin-top: auto;
+  position: relative;
+  z-index: 0;
+  flex-shrink: 0;
+  margin-top: 32px;
   padding: 60px 20px 20px;
   text-align: center;
   border-top: 1px solid rgba(212, 175, 55, 0.2);
+  box-sizing: border-box;
 }
 
 .rg-footer-brand {
+  margin-bottom: 4px;
+  color: var(--rg-ink);
   font-family: var(--rg-font-display);
   font-size: 20px;
   font-weight: 600;
-  color: var(--rg-ink);
-  margin-bottom: 4px;
 }
 
 .rg-footer-text {
-  font-size: 12px;
-  color: var(--rg-ink-soft);
-  font-style: italic;
   margin: 0 0 18px;
+  color: var(--rg-ink-soft);
+  font-size: 12px;
+  font-style: italic;
 }
 
 .rg-footer-contact {
@@ -32,15 +36,15 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12.5px;
   color: var(--rg-ink-soft);
+  font-size: 12.5px;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .rg-footer-contact-item svg {
-  color: var(--rg-accent);
   flex-shrink: 0;
+  color: var(--rg-accent);
 }
 
 .rg-footer-contact-item:hover {
@@ -55,55 +59,71 @@
 }
 
 .rg-social {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
   display: grid;
   place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid rgba(212, 175, 55, 0.35);
+  border-radius: 50%;
   background: var(--rg-bg);
   color: var(--rg-accent);
-  border: 2px solid rgba(212, 175, 55, 0.35);
   text-decoration: none;
-  transition: background 0.2s, transform 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    color 0.2s;
 }
 
 .rg-social:hover {
   background: rgba(212, 175, 55, 0.08);
+  color: var(--rg-accent);
   transform: translateY(-1px);
 }
 
 .rg-footer-divider {
-  height: 1px;
   max-width: 240px;
+  height: 1px;
   margin: 0 auto 18px;
   background: rgba(212, 175, 55, 0.2);
 }
 
 .rg-footer-bottom {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  flex-wrap: wrap;
 }
 
 .rg-footer-admin {
   display: inline-grid;
   place-items: center;
   padding: 6px 14px;
+  border: 1px solid rgba(212, 175, 55, 0.6);
   border-radius: 999px;
   background: var(--rg-bg);
   color: var(--rg-accent);
-  text-decoration: none;
-  border: 1px solid rgba(212, 175, 55, 0.6);
-  transition: background 0.2s, transform 0.2s, color 0.2s;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.05em;
+  text-decoration: none;
   white-space: nowrap;
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    color 0.2s;
 }
 
 .rg-footer-admin:hover {
   background: rgba(212, 175, 55, 0.08);
+  color: var(--rg-accent);
   transform: translateY(-1px);
+}
+
+@media (max-width: 560px) {
+  .rg-footer {
+    margin-top: 24px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
 }

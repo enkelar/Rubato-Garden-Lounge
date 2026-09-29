@@ -17,10 +17,6 @@ body {
 
 #root {
   width: 100%;
-  max-width: 100%;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  min-height: 100vh;
   background-color: #142219;
 }

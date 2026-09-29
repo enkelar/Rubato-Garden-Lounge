@@ -100,8 +100,8 @@ export function HomeView() {
             </Link>
           ))}
         </div>
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import SEO from "../components/SEO";import { Link, useParams } from "react-router-dom";
+import SEO from "../components/SEO";
+import { Link, useParams } from "react-router-dom";
 import Footer from "./Footer";
 import { useLanguage } from "../context/LanguageContext";
 import { useFetch } from "../hooks/useFetch";
@@ -8,19 +9,32 @@ import "./Item.css";
 function useItemPage(slug, itemId, language) {
   const { data, error, loading } = useFetch(
     `/api/menu/${slug}/${itemId}?lang=${language}`,
-    { errorMessage: "Failed to fetch item" }
+    {
+      errorMessage: "Failed to fetch item",
+    }
   );
 
   const cat = data?.data?.category || null;
   const item = data?.data?.item || null;
 
-  return { cat, item, error, loading };
+  return {
+    cat,
+    item,
+    error,
+    loading,
+  };
 }
 
 export function ItemView() {
   const { slug, itemId } = useParams();
   const { language, t } = useLanguage();
-  const { cat, item, error, loading } = useItemPage(slug, itemId, language);
+
+  const {
+    cat,
+    item,
+    error,
+    loading,
+  } = useItemPage(slug, itemId, language);
 
   return (
     <div className="rg-app rg-detail">
@@ -47,27 +61,42 @@ export function ItemView() {
           />
         )}
 
-        <Link to={cat ? `/menu/${cat.slug}` : "/"} className="rg-detail-back">
+        <Link
+          to={cat ? `/menu/${cat.slug}` : "/"}
+          className="rg-detail-back"
+        >
           ← {t("item.backTo")} {cat?.name || t("item.menu")}
         </Link>
 
-        {loading && <div className="rg-loading">{t("item.loading")}</div>}
-        {error && <div className="rg-error">{t("item.error")} {error}</div>}
+        {loading && (
+          <div className="rg-loading">
+            {t("item.loading")}
+          </div>
+        )}
+
+        {error && (
+          <div className="rg-error">
+            {t("item.error")} {error}
+          </div>
+        )}
+
         {!loading && !item && !error && (
-          <div className="rg-loading">{t("item.notFound")}</div>
+          <div className="rg-loading">
+            {t("item.notFound")}
+          </div>
         )}
 
         {!loading && item && (
           <div className="rg-item-card">
             <div className="rg-item-card-media">
               <img
-                 src={item.image || "/product-placeholder.svg"}
-                 alt={`${item.name} - ${item.description}`}
-                 onError={(e) => {
-                   e.target.onerror = null;
-                   e.target.src = "/product-placeholder.svg";
-                 }}
-               />
+                src={item.image || "/product-placeholder.svg"}
+                alt={`${item.name} - ${item.description}`}
+                onError={(event) => {
+                  event.currentTarget.onerror = null;
+                  event.currentTarget.src = "/product-placeholder.svg";
+                }}
+              />
             </div>
 
             <div className="rg-item-card-body">
@@ -78,17 +107,24 @@ export function ItemView() {
               )}
 
               <div className="rg-item-card-headline">
-                <h1 className="rg-item-card-name">{item.name}</h1>
-                <div className="rg-item-card-price">€{Number(item.price).toFixed(2)}</div>
+                <h1 className="rg-item-card-name">
+                  {item.name}
+                </h1>
+
+                <div className="rg-item-card-price">
+                  €{Number(item.price).toFixed(2)}
+                </div>
               </div>
 
-              <p className="rg-item-card-desc">{item.description}</p>
+              <p className="rg-item-card-desc">
+                {item.description}
+              </p>
             </div>
           </div>
         )}
-
-        <Footer />
       </main>
+
+      <Footer />
     </div>
   );
 }

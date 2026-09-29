@@ -82,8 +82,8 @@ export function NightMenuView() {
             </Link>
           ))}
         </div>
-        <Footer />
       </main>
+        <Footer />
     </div>
   );
 }
