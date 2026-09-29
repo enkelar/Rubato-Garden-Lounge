@@ -152,7 +152,20 @@
   transform: translateY(-1px);
 }
 
+.rg-card-skeleton {
+  cursor: default;
+  background: linear-gradient(90deg, #1c2d21 0%, #273c2f 50%, #1c2d21 100%);
+  background-size: 200% 100%;
+  animation: rg-shimmer 1.4s ease-in-out infinite;
+}
+.rg-card-skeleton:hover { transform: none; }
+
 @keyframes rg-night-glow {
   0%, 100% { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 4px 16px -4px rgba(228, 187, 133, 0.6); }
   50% { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) inset, 0 4px 22px -2px rgba(228, 187, 133, 0.9); }
+}
+
+@keyframes rg-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
 }

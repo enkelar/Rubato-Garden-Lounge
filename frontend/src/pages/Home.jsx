@@ -53,7 +53,13 @@ export function HomeView() {
 
       <main className="rg-container">
         {error && <div className="rg-error">{t("home.error")} {error}</div>}
-        {loading && <div className="rg-loading">{t("home.loading")}</div>}
+        {loading && (
+          <div className="rg-grid" role="status" aria-label={t("home.loading")}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="rg-card rg-card-skeleton" />
+            ))}
+          </div>
+        )}
         {!loading && categories.length === 0 && !error && (
           <div>{t("home.empty")}</div>
         )}
