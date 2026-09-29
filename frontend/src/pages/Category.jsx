@@ -10,12 +10,12 @@ export function CategoryView() {
   const { language, t } = useLanguage();
   const { slug } = useParams();
 
-  const { data, error, loading } = useFetch(
-    `/api/menu/${slug}?lang=${language}`,
-    {
-      errorMessage: "Failed to fetch category",
-    }
-  );
+  const categoryUrl = `/api/menu/${encodeURIComponent(slug)}?lang=${language}`;
+
+  const { data, error, loading } = useFetch(categoryUrl, {
+    errorMessage: "Failed to fetch category",
+    ttl: 5 * 60 * 1000,
+  });
 
   const cat = data?.data || null;
   const items = cat?.items || [];
@@ -123,12 +123,16 @@ export function CategoryView() {
                   >
                     <img
                       src={item.image || "/product-placeholder.svg"}
-                      alt={`${item.name} - ${item.description}`}
+                      alt={`${item.name}`}
                       className="rg-item-img"
-                      loading="lazy"
+                      width="640"
+                      height="480"
+                      loading={i < 2 ? "eager" : "lazy"}
+                      fetchPriority={i === 0 ? "high" : "auto"}
+                      decoding="async"
                       onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "/product-placeholder.svg";
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "/product-placeholder.svg";
                       }}
                     />
 
